@@ -1,0 +1,17 @@
+/*el-dialog*/
+.el-dialog {
+  .el-dialog__title {
+    font-weight: bold;
+  }
+  .desc {
+    padding: 5px 0 20px 0;
+    text-align: center;
+    line-height: 150%;
+  }
+  .el-dialog__body {
+    padding-top: 10px;
+  }
+  .el-select {
+    width: 100%;
+  }
+}

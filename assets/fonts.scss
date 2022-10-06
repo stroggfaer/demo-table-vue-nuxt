@@ -1,0 +1,83 @@
+h1 {
+  @include font-size(32px, 42px, bold);
+  @media screen and (max-width: $media-mobile) {
+    @include font-size(26px, 32px, bold);
+  }
+  //text-transform: uppercase;
+}
+h2 {
+  @include font-size(24px, 32px, bold);
+ // text-transform: uppercase;
+  @media screen and (max-width: $media-mobile) {
+    @include font-size(20px, 32px, bold);
+  }
+}
+h3.title {
+  margin-bottom: 8px;
+}
+// размер
+.font-20 {
+  @include font-size(20px,22px);
+}
+.font-12 {
+  @include font-size(12px,160%);
+}
+.font-16 {
+  @include font-size(16px,22px);
+}
+.font-22 {
+  @include font-size(22px,148%);
+}
+.title-h3 {
+  margin: 10px 0px;
+  @include font-size(18px,36px,bold);
+}
+.text-success {
+  color: $color-green;
+}
+.text-color-green {
+  color: $color-green-lite;
+}
+.text-color-red {
+  color: #EB5757;
+}
+.text-error {
+  color: $color-red;
+}
+.text-warning {
+  color: $color-orange;
+}
+.text-color-yellow {
+  color: $color-yellow;
+}
+.text-info {
+  color: $color-medium-grey;
+}
+.text-color-grey {
+  color: $color-dark-grey;
+}
+.no_bold {
+  font-weight: normal;
+}
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
+::-webkit-input-placeholder {
+  font-family: 'Gilroy', monospace;
+  color: $color-black-medium;
+}
+::-moz-placeholder          {
+  font-family: 'Gilroy', monospace;
+  color: $color-black-medium;
+}/* Firefox 19+ */
+:-moz-placeholder           {
+  font-family: 'Gilroy', monospace;
+  color: $color-black-medium;
+}/* Firefox 18- */
+:-ms-input-placeholder      {
+  font-family: 'Gilroy', monospace;
+  color: $color-black-medium;
+}

@@ -1,0 +1,203 @@
+html {
+  font-family: 'Gilroy', monospace;
+  font-size: 16px;
+  word-spacing: 1px;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  padding: 0;
+  color: $color-black-medium;
+}
+
+*, *:before, *:after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+// Подключаем ситили;
+@import "mixins";
+@import "vars";
+@import "fonts";
+@import "component";
+
+
+.margin-clear{
+  margin:0px !important;
+}
+.margin-right-clear{
+  margin-right:0px !important;
+}
+.margin-bottom-clear {
+  margin-bottom:0px !important;
+}
+.margin-top-clear {
+  margin-top:0px !important;
+}
+.margin-left-clear {
+  margin-left:0px !important;
+}
+.padding-clear{
+  padding:0px !important;;
+}
+.padding-right-clear{
+  padding-right:0px !important;
+}
+.padding-bottom-clear {
+  padding-bottom:0px !important;
+}
+.padding-top-clear {
+  padding-top:0px !important;
+}
+.padding-left-clear {
+  padding-left:0px !important;
+}
+.no-border-top{
+  border-top:none !important;
+}
+.no-border-bottom{
+  border-bottom:none !important;
+}
+.no-border-left{
+  border-left:none !important;
+}
+.no-border-right{
+  border-right:none !important;
+}
+.upper{
+  text-transform: uppercase;
+}
+.no_upper{
+  text-transform: none !important;
+}
+
+.el-footer {
+  height: 10px !important;
+}
+.content {
+  margin-top: 0px;
+  padding-left: 35px;
+  min-height: 600px;
+}
+
+a {
+  color: $color-white;
+  text-decoration: none;
+  font-weight: 700;
+}
+.link {
+  @include link-color($color-yellow);
+  @include ease();
+  &.no_decoration:hover {
+    opacity: 0.7;
+    text-decoration: none;
+  }
+}
+.link-green {
+  @include link-color($color-green)
+}
+a.el-button {
+  cursor: pointer;
+  text-decoration: none;
+}
+.border-none {
+  border: none !important;
+}
+.wrap {
+  height: 100%;
+}
+.el-header {
+  background: $color-white;
+  height: 40px !important;
+  padding: 0px 15px;
+}
+.el-aside {
+  width: 70px !important;
+  position: relative;
+  .bg {
+    background: linear-gradient(0.61deg, #2D20E3 -92.94%, #9ED6EF 99.69%);
+    transform: rotate(-180deg);
+    position: absolute;
+    top:0;
+    z-index: -1;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  box-shadow: 6px -6px 15px rgba(56, 55, 57, 0.1);
+
+  z-index: 100;
+}
+.el-footer {
+  line-height: 10px;
+  background: transparent;
+}
+.el-main {
+  position: relative;
+  padding: 5px 20px;
+}
+
+body > .el-container {
+  margin-bottom: 10px;
+}
+.el-container:nth-child(5) .el-aside,
+.el-container:nth-child(6) .el-aside {
+  line-height: 260px;
+}
+
+.el-container:nth-child(7) .el-aside {
+  line-height: 320px;
+}
+
+.layout-wrap {
+  min-width: 370px;
+  //max-width: 1366px;
+  height: 100vh; // sroll
+  margin: auto;
+}
+.body-header {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  height: 100%;
+}
+.mb-10 {
+  margin-bottom: 10px;
+}
+p {
+  margin-bottom: 15px;
+}
+.cursor__pointer {
+  cursor: pointer;
+  opacity: 1;
+  @include ease();
+  &:hover, &.disabled {
+    opacity: .6;
+  }
+}
+
+
+::-webkit-input-placeholder {
+  /* WebKit, Blink, Edge */
+  color:    $color-black-medium !important;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+  color:    $color-black-medium !important;
+  opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+  color:    $color-black-medium !important;
+  opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color:    $color-black-medium !important;
+}
+::-ms-input-placeholder { /* Microsoft Edge */
+  color:    $color-black-medium !important;
+}
+::placeholder { /* Most modern browsers support this now. */
+  color:    $color-black-medium  !important;
+}
