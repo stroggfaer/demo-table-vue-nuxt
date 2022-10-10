@@ -1,4 +1,45 @@
+.el-button {
+  &.el-button--primary {
+    background: #D2DDFC;
+    border-color:#D2DDFC;
+    color: $color-black;
+    &.is-plain {
+      background: transparent;
+      color: #D2DDFC;
+    }
+    //  border: none;
+    &:hover {
+      opacity: 0.7;
+    }
+    &:focus {
+      outline: none;
+    }
+    &:active {
+      border-color: transparent;
+      outline: none;
+    }
+    &.is-disabled {
+      opacity: 0.7;
+      background: #D2DDFC;
+      border-color:#D2DDFC;
+      color: $color-black;
+    }
+  }
+  &:hover {
+    background: #D2DDFC;
+    border-color:#D2DDFC;
+    color: $color-black;
+  }
+  &.is-disabled {
+    opacity: 0.7;
+    background: #D2DDFC;
+    border-color:#D2DDFC;
+    color: $color-black;
+  }
+}
+
 /*el-dialog*/
+
 .el-dialog {
   .el-dialog__title {
     font-weight: bold;
@@ -17,8 +58,6 @@
 }
 /*---DateRange----*/
 .dateRange {
-  $color-blue: #2DA5DB;
-
   padding: 15px;
   color: $color-black;
   .title {
@@ -51,18 +90,46 @@
       //.blue-highlight-text-white {
       //  color: #fff;
       //}
-      .blue-highlight-text-white {
-        color: #fff;
+      .highlight-start,
+      .highlight-end{
+        border-radius: 5px !important;
       }
-      .vc-highlight.blue-highlight {
-        background-color: $color-blue !important;
-        border-color: $color-blue !important;
+      .vc-day-content.vc-focusable {
+        &:hover,&:focus {
+          border-radius: 5px !important;
+        }
       }
+      .blue-highlight-text-white,
+      .red-highlight-text-white {
+        //color: $color
+        font-weight: bold;
+        color: $color-black;
+      }
+
+      .vc-highlight {
+        &.blue-highlight{
+          background-color: $color-blue-lite !important;
+          border-color: $color-blue-lite !important;
+        }
+        &.red-highlight{
+          background-color: $color-red !important;
+          border-color: $color-red !important;
+        }
+      }
+
+
       .vc-highlight.vc-highlight-base-start.blue-highlight,.vc-highlight.vc-highlight-base-end.blue-highlight {
         background-color: rgba($color-blue,0.1) !important;
       }
       .vc-highlight.vc-highlight-base-middle.blue-highlight{
         background-color: rgba($color-blue,0.1) !important;
+      }
+
+      .vc-highlight.vc-highlight-base-start.red-highlight,.vc-highlight.vc-highlight-base-end.red-highlight {
+        background-color: rgba($color-red,0.1) !important;
+      }
+      .vc-highlight.vc-highlight-base-middle.red-highlight{
+        background-color: rgba($color-red,0.1) !important;
       }
     }
 
@@ -80,6 +147,77 @@
       border-color:#D2DDFC;
       color: $color-black;
       opacity: 0.6;
+    }
+  }
+}
+
+.el-message-box__headerbtn .el-message-box__close {
+  font-size: 1.6em;
+}
+.confirm__modal,
+.el-dialog .confirm__modal {
+  &.center {
+    .el-message-box__title,
+    .el-dialog__header .el-dialog__title {
+      text-align: center;
+      padding: 0 30px;
+      font-family: 'Gilroy';
+    }
+  }
+  &.size-480 {
+    width: 480px !important;
+  }
+  .el-message-box__input {
+    padding-top: 0px;
+    .el-input__inner {
+      background: $color-grey-lite;
+      border-color: $color-grey-lite;
+      &.invalid:focus, &.invalid {
+        border-color: $color-red;
+      }
+      &:focus {
+        border-color: #D2DDFC;
+      }
+    }
+  }
+  .el-message-box__errormsg {
+    text-align: initial;
+  }
+
+  .el-message-box__title ,
+  .el-dialog__header .el-dialog__title{
+    @include font-size(24px,120%,bold);
+    text-align: center;
+    white-space: break-spaces;
+  }
+  .el-message-box__header,
+  .el-dialog_header,
+  {
+    padding-top: 50px;
+  }
+  .el-message-box--center,
+  .el-dialog--center {
+    padding-bottom: 50px;
+  }
+  .el-message-box__message {
+    padding-bottom: 20px;
+    white-space: break-spaces;
+  }
+  .el-button {
+    padding: 12px 30px;
+    font-size: 16px;
+    min-width: 140px;
+    border-radius: 5px;
+  }
+  .el-message-box__btns button:nth-child(2),
+  .el-dialog__btns button:nth-child(2) {
+    margin-left: 20px;
+  }
+  .el-message-box__close {
+    &:hover {
+      &::before {
+        color: $color-dark-grey;
+      }
     }
   }
 }

@@ -69,37 +69,18 @@
           </el-select>
 
           <div class="filter_date">
-
-            <el-popover
-              placement="bottom"
-              trigger="manual"
-              v-model="visible">
-              <div class="dateRange" >
-                <b class="title">Выберите  за какие даты будет сформирован отчет по времени</b>
-                <div>
-                  <v-date-picker
-                    :key="attK"
-                    :value="dateRange"
-                    :attributes="attributes"
-                    ref="datePicker"
-                    :columns="2"
-                    is-range
-                    @dayfocusin="handleDayfocusin"
-                    @daymouseenter="handleDaymouseenter"
-                    @daymouseleave="handleDaymouseleave"
-                    @drag="handleDragValue"
-                    :select-attribute="setAttributes"
-                    :drag-attribute="setAttributes"
-                    :masks="{
-                      input: 'YYYY-MM-DD'
-                    }"
-                  >
-                  </v-date-picker>
-                </div>
-                <el-button :loading="loading" type="primary" size="small"  @click="handleDateRangeSave" :disabled="disabledBtn">Сохранить</el-button>
-              </div>
-              <div slot="reference" @click="visible = !visible" class="dateRange"> {{formatDateRange(dateRange,'start')}} - {{formatDateRange(dateRange,'end')}}</div>
-            </el-popover>
+            <date-picker-range-popover
+              title="Выберите  за какие даты будет сформирован отчет по времени"
+              :loading="loading"
+              :date-range="dateRange"
+              :visible-popover="visible"
+              @on-visible="(e) => this.visible = e"
+              @on-btn-save="handleBtnDateRangeSave"
+            >
+              <template slot="value-title">
+                {{formatDateRange(dateRange,'start')}} - {{formatDateRange(dateRange,'end')}}
+              </template>
+            </date-picker-range-popover>
           </div>
           <div class="excel-pointer" @click="handleExcel">
             <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -110,7 +91,7 @@
         </div>
 <!--        <pre v-loading="loading">{{tableResult}}</pre>-->
 <!--        <pre>{{currentDateRange}}</pre>-->
-<!--         <pre>{{dateRange}}</pre>-->
+         <pre>{{dateRange}}</pre>
         <app-table-canvas-reports
           :key="key"
           class="plan-table"
@@ -136,6 +117,8 @@ import AppTableCanvas from "/components/table-canvas/app-table-canvas";
 import {arrMounts, headerRangeDays, isMinMaxRangeDays} from "/core_table/utils";
 import moment from "moment";
 import AppTableCanvasReports from "../../components/table-canvas/app-table-canvas-reports";
+import DatePickerRangePopover from "../../components/date-picker-range-popover";
+
 
 const range = ['2022-10-01', '2022-10-14']
 
@@ -149,7 +132,7 @@ console.log('minRange',minRange);
 
 // console.log('currentDate',currentDate);
 export default {
-  components: {AppTableCanvasReports, AppTableCanvas },
+  components: {DatePickerRangePopover, AppTableCanvasReports, AppTableCanvas },
 
   data() {
     return {
@@ -157,11 +140,11 @@ export default {
       key: 0,
       dateValue: '',
       loading: false,
+      visible: false,
       dateRange: {
         start: range[0],
         end: range[1]
       },
-      visible: false,
 
       testDataMok: [], // mok
 
@@ -179,71 +162,27 @@ export default {
       projectValue: [],
       employeeValue: [],
       currentDateRange: [],
-      attributes: [],
-      attK: 0,
-      //
-      setAttributes: {
-        highlight: {
-          start: {
-            class: 'blue-highlight',
-            contentClass: 'blue-highlight-text-white'
-          },
-          base: { class: 'blue-highlight'},
-          end: {
-            class: 'blue-highlight',
-            contentClass: 'blue-highlight-text-white'
-          },
-        },
-      },
-      disabledBtn: false
     }
   },
   computed: {},
   methods: {
-    handleDayfocusin(e) {},
 
-    handleDaymouseenter(e) {},
-
-    handleDaymouseleave(e) {},
-
-    handleDragValue(e) {
-      const {start, end} = e
-      const isRange = isMinMaxRangeDays(start, end);
-      const styleHig = {
-        highlight: {
-          start: {
-            class: 'blue-highlight',
-            contentClass: 'blue-highlight-text-white'
-          },
-          base: { class: 'blue-highlight'},
-          end: {
-            class: 'blue-highlight',
-            contentClass: 'blue-highlight-text-white'
-          },
-        },
+    // MOK;
+    handleBtnDateRangeSave(value) {
+      if(value.isRange) {
+        this.dateRange = value.date;
+        this.currentDateRange = headerRangeDays(this.dateRange.start, this.dateRange.end, 'days');
+        this.loading = true;
+        setTimeout(()=>{
+          this.testDataMok = this.mokTest();
+          this.tableResult = this.testDataMok;
+          this.loading = false;
+          this.visible = false;
+          this.key = Math.random();
+        },1000);
       }
-      this.setAttributes = !isRange ? { highlight: 'red'} : styleHig
-      this.disabledBtn =!isRange
     },
-    //
-    handleDateRangeSave(e) {
-       const calendar = this.$refs.datePicker;
-      // console.log('onDayClick datePicker',calendar.inputValues);
-       this.dateRange.start = calendar.inputValues[0]
-       this.dateRange.end = calendar.inputValues[1]
-       const isRange = isMinMaxRangeDays(this.dateRange.start, this.dateRange.end,);
-       if(isRange) {
-         this.currentDateRange = headerRangeDays(this.dateRange.start, this.dateRange.end, 'days');
-         this.loading = true;
-         setTimeout(()=>{
-           this.testDataMok = this.mokTest();
-           this.tableResult = this.testDataMok;
-           this.loading = false;
-           this.visible = false;
-           this.key = Math.random();
-         },1000);
-       }
-     },
+
      formatDateRange(dateRange,type = '') {
        if(type === 'start' && dateRange.start) {
           const m = moment(dateRange.start,'YYYY-MM-DD');
@@ -258,7 +197,16 @@ export default {
     headerRangeDays,
 
     handleExcel() {
-        console.log('handleExcel')
+      this.$confirm('', 'Скачать таблицу \n' +'в формате Excel?', {
+        cancelButtonText: 'Нет',
+        confirmButtonText: 'Да',
+        center: true,
+        cancelButtonClass: 'default',
+        customClass: 'confirm__modal center'
+      }).then(async () => {
+        this.$message.success('Вы успешно скачали! но Excel загружается с апи');
+        //
+      }).catch((e)=>{});
     },
     // Фильтры эмитация фильтр;
     filtersArr() {
@@ -896,7 +844,7 @@ export default {
      this.currentDateRange = headerRangeDays(range[0], range[1], 'days');
 
     //TODO MOK;
-    this.testDataMok = this.mokTest();
+     this.testDataMok = this.mokTest();
 
     ////
     const worksSelects = []
@@ -989,56 +937,18 @@ export default {
   font-weight: bold;
   margin: 0 0 0 auto;
   padding-right: 20px;
-  .el-icon-arrow-right:before {
-    font-weight: bold;
-    font-size: 1em;
-    cursor: pointer;
-  }
-  .el-icon-arrow-left:before {
-    font-weight: bold;
-    font-size: 1em;
-    cursor: pointer;
-  }
-  .dateRange {
-    cursor: pointer;
-    text-transform: capitalize;
-    //width: 270px;
-    white-space: nowrap;
-  }
+
 }
 
-/* календар  */
-.mount__com {
-  font-family: 'Gilroy';
-  border: none;
-  :deep(.vc-weeks) {
-    display: none;
-  }
-  :deep(.vc-arrow) {
-    &:hover {
-      background: transparent;
-    }
-  }
-  :deep(.vc-pane) {
-    min-width: 200px;
-  }
-  :deep(.vc-arrows-container) {
-    .vc-arrow {
-      @include ease();
-      opacity: 0.9;
-      svg path {
-        fill: #000;
-      }
-      &:hover {
-        opacity: 0.4;
-        background: transparent;
-      }
-    }
 
+.excel-pointer {
+  position: relative;
+  top:5px;
+  cursor: pointer;
+  opacity: 1;
+  @include ease();
+  &:hover {
+    opacity: 0.6;
   }
-  :deep(.vc-title) {
-    text-transform: capitalize;
-  }
-
 }
 </style>
