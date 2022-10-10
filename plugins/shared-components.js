@@ -10,4 +10,6 @@ Vue.config.ignoredElements = ['canvas-datagrid'];
 Vue.use(CanvasDatagrid);
 Vue.use(VueVirtualScroller)
 Vue.use(CGrid);
-Vue.use(VCalendar);
+Vue.use(VCalendar, {
+  componentPrefix: 'v'
+})

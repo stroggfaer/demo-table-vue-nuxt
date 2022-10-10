@@ -16,7 +16,8 @@ export const icons = {
 export const colors = {
   Primary: 'rgba(65, 164, 255, 0.2)',
   White: '#FFFFFF',
-  Black: '#0F0F0F',
+  Black: '#373737',
+  BlackNormal: 'rgba(44, 47, 53, 0.6)',
   GreyPO: '#EFEFEF',
   DarkGray: '#606266',
   NeutralGray: '#C0C4CC',

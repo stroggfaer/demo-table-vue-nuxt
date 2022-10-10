@@ -1265,6 +1265,7 @@ export default {
 
     // TODO расчет выходной недели;
     isWeekEnd(cDay) {
+      console.log(this.dateCurrent,cDay)
       const week = moment(this.dateCurrent,"YYYY-MM").date(cDay).weekday();
       if([0,6].includes(week)) {
         return  cDay;

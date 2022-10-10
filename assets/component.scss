@@ -15,3 +15,71 @@
     width: 100%;
   }
 }
+/*---DateRange----*/
+.dateRange {
+  $color-blue: #2DA5DB;
+
+  padding: 15px;
+  color: $color-black;
+  .title {
+    @include font-size(16px,20px);
+    font-weight: bold;
+    padding-bottom: 15px;
+  }
+  .vc-container {
+    border: none;
+    .vc-title,.vc-arrow {
+      color: $color-blue;
+    }
+    .vc-header {
+       margin-bottom: 10px;
+    }
+    .vc-weekday {
+      color: rgba(44, 47, 53, 0.6);
+      font-weight: normal;
+      font-size: 12px;
+    }
+    .vc-day-content {
+      color: #373737;
+      font-size: 12px;
+    }
+    .vc-container [role=button], .vc-container button {
+      color: #fff;
+    }
+
+    .vc-day-box-center-center {
+      //.blue-highlight-text-white {
+      //  color: #fff;
+      //}
+      .blue-highlight-text-white {
+        color: #fff;
+      }
+      .vc-highlight.blue-highlight {
+        background-color: $color-blue !important;
+        border-color: $color-blue !important;
+      }
+      .vc-highlight.vc-highlight-base-start.blue-highlight,.vc-highlight.vc-highlight-base-end.blue-highlight {
+        background-color: rgba($color-blue,0.1) !important;
+      }
+      .vc-highlight.vc-highlight-base-middle.blue-highlight{
+        background-color: rgba($color-blue,0.1) !important;
+      }
+    }
+
+  }
+  .el-button {
+    font-size: 16px;
+    width: 95%;
+    margin: 20px auto 0;
+    background: #D2DDFC;
+    border-color:#D2DDFC;
+    color: $color-black;
+    display: block;
+    &.is-disabled {
+      background: #D2DDFC;
+      border-color:#D2DDFC;
+      color: $color-black;
+      opacity: 0.6;
+    }
+  }
+}
