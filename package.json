@@ -22,7 +22,8 @@
     "vue-cheetah-grid": "^1.8.1",
     "vue-virtual-scroller": "^1.0.10",
     "x-canvas-table": "git+https://github.com/stroggfaer/canvastable.git#v14",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "xlsx-style": "^0.8.13"
   },
   "devDependencies": {
     "node-sass": "^4.14.1",

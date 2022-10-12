@@ -113,8 +113,35 @@ a.el-button {
 }
 .el-header {
   background: $color-white;
-  height: 40px !important;
+  height: 20px !important;
   padding: 0px 15px;
+  @media screen and (max-width: $media-book) {
+    padding: 0px 10px;
+  }
+}
+.header-top {
+  margin-bottom: 20px;
+  .el-icon-back:before {
+    font-weight: bold;
+    font-size: 20px;
+
+  }
+  .el-page-header__content {
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 150%;
+    position: relative;
+    top: 2px;
+    @media screen and (max-width: $media-book-v) {
+      font-size: 22px;
+    }
+  }
+  .el-page-header__left {
+    margin-right: 5px;
+    &::after{
+      display: none;
+    }
+  }
 }
 .el-aside {
   width: 70px !important;

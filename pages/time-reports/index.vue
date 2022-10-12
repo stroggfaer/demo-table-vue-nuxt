@@ -886,7 +886,7 @@ export default {
       const header = {
         sheetid: `c ${start} по ${end}`,
         headers: false,
-        column: {style:{Font:{Bold:"1"}}},
+        column: {1: {style: {Color:"#E1697B" }} },
         rows: {1:{style:{Font:{Color:"#FF0077"}}}},
         cells: {1:{1:{
               style: {Font:{Color:"#00FFFF"}}
@@ -896,6 +896,7 @@ export default {
       /*---Логика---*/
       try {
         // XLSX
+        //ПОЛИГОН
         if(formatType === 1) {
           const XLSX = require("xlsx/xlsx.mjs");
         //  alasql.utils.global.XLSX = XLSX;
@@ -958,26 +959,7 @@ export default {
 .plan-table {
   margin-left: -20px;
 }
-.header-top {
-  margin-bottom: 20px;
-  :deep(.el-icon-back:before) {
-    font-weight: bold;
-    font-size: 20px;
-  }
-  :deep(.el-page-header__content) {
-    font-weight: 700;
-    font-size: 32px;
-    line-height: 150%;
-    position: relative;
-    top: 2px;
-  }
-  :deep(.el-page-header__left) {
-    margin-right: 5px;
-    &::after{
-      display: none;
-    }
-  }
-}
+
 /*filters*/
 .filters {
   max-width: 1500px;

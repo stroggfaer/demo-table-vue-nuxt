@@ -1,7 +1,8 @@
 <template>
-  <div>
+  <div :key="keyTable">
     <div class="xs-data-grid" >
-      <div  id='containerCanvas' :style="{'max-width': '1500px', width: `${widthColumns}px`, height: `${heightRow}px`}" v-loading="loading" ref="refCanvas"></div>
+      <!--'max-width': '1500px'-->
+      <div id='containerCanvas' :style="{ width: `${widthColumns}px`, height: `${heightRow}px`}" v-loading="loading" ref="refCanvas"></div>
       <div v-if="!dataTable.length" class="empty" :style="{'max-width': `${widthColumns}px`,width: `${widthColumns - 10}px`}">Нет данные</div>
       <div
         :class="`xs-data-grid-overlayer`"
@@ -109,11 +110,13 @@ export default {
     headerColumnsTotal:  { type: Number, default: 0},
     dateCurrent:  { type: String},
     shortenedDay:  { type: Object },
+    normalHours:  { type: Number, default: 8 },
   },
   components: { CanvasTable },
 
   data() {
     return {
+      keyTable: 0,
       // Запрос с бэка;
       dataResult: [],
       //   daysTotal: headerDays().map((item,ind) => ({ total:item, key:ind, value: `${item}` })),
@@ -149,16 +152,27 @@ export default {
       typeContextMenu: '',
       //Настройки таблицы;
       options: {
-        canvas_cell_w: 40, // Размер ячейки;
+        canvas_cell_w: 40,//40, // Размер ячейки;
         canvas_columns_width: 250,
-        canvas_header_height: 40,
-        canvas_row_height: 40
+        canvas_header_height: 40, //40,
+        canvas_row_height: 40,//40,
+        canvas_font_size_16: '16px', // 16 px
+        canvas_font_size_20: '20px', // 20 px
+        canvas_font_size_14: '14px', // 14 px
+        canvas_icon: {
+          left: 5,
+          top: 1,
+          width: 20,
+          height: 20,
+        },
       },
       // Настройки конфирм;
       confirmPop: {
         title: 'Вы уверены, что хотите удалить?',
         type: 'cell'
       },
+      currentTimeout: undefined,
+      // currentTimeout: undefined,
     };
   },
 
@@ -186,6 +200,12 @@ export default {
   },
 
   methods: {
+
+    cancelTimeout () {
+      clearTimeout(this.currentTimeout)
+      this.currentTimeout = undefined
+    },
+
     handleBlur() {
       this.hideEditor()
       this.updateTable();
@@ -196,9 +216,7 @@ export default {
       this.updateTable();
     },
 
-    handleInput(e) {
-
-    },
+    handleInput(e) {},
 
     // Удалить ;
     handleDelete(e) {
@@ -445,11 +463,11 @@ export default {
       if ( !ct ) {
         return
       }
-
+      const el = document.getElementById('containerCanvas');
       this.dataTable = this.generatePersons();
-      ct.source = this.dataTable;
       this.heightRowSize(this.dataTable.length)
-     // ct.props = this.configTable(el)
+      ct.props = this.configTable(el)
+      ct.source = this.dataTable;
       await this.$nextTick()
       ct.resize();
     },
@@ -471,7 +489,7 @@ export default {
                 text: data.name,
                 style: {
                   color: '#F9FAFB',
-                  fontSize: '16px',
+                  fontSize: this.options.canvas_font_size_16,
                   fontWeight: 'bold',
                   left: widthWindow, //widthWindow
                   align: 'center'
@@ -530,7 +548,7 @@ export default {
                 style: {
                   width: 120,
                   fontWeight:'bold',
-                  fontSize: '16px',
+                  fontSize: this.options.canvas_font_size_16,
                   padding: [0, 0, 0, 0],
                   //   backgroundColor: '#AAC9F2'
 
@@ -859,11 +877,8 @@ export default {
               path: isMaxMin ? icons[cell.icon + '_red'] : icons[cell.icon] , // sum // close // box
               style: {
                 color: 'transparent',
-                left: 5,
-                top: 1,
-                width: 20,
-                height: 20,
-                align: 'center'
+                align: 'center',
+                ...this.options.canvas_icon
               },
               popTitle: cell.popTitle || '',
               event: {
@@ -883,10 +898,12 @@ export default {
 
             // TODO: Сотрудник значение;
             // console.log('cell.value',cell.value, totalRow);
+            // cell.value
             layerValue = new CanvasTable.Text({
-              text: `${cell.value}`, //day.value
+              text: `${totalRow  || 0}`, //day.value
+              popTitle: `${cell.value} ч`,
               style: {
-                fontSize: '16px',
+                fontSize: this.options.canvas_font_size_16,
                 fontWeight:'bold',
                 align:'center',
                 color: (isMaxMin? '#EB5757' : 'rgba(44, 47, 53, 0.6)'),
@@ -901,7 +918,8 @@ export default {
             style: {
               border:`1px #9EA7C5`,
               backgroundColor: bg,
-              zIndex: 0
+              zIndex: 0,
+              align:'center',
             },
             children: [layerValue],
             event: {
@@ -1197,6 +1215,9 @@ export default {
        this.hideEditor();
        this.isDrawing = false;
        this.isDrawingMouseEnter = false;
+
+       //
+       this.responseTable();
     },
 
     /*---Рамка канвас--*/
@@ -1320,7 +1341,6 @@ export default {
     },
     // Сохраняем значание;
     setInputNumber () {
-
       const $this = this;
       if($this.cellOn) {
         if(!$this.isErrorInput) {
@@ -1354,7 +1374,6 @@ export default {
     handleKeyControl(e) {
       switch (e.keyCode) {
         case 8:
-
           break
         case 46:
          const editCell = this.cellOn;
@@ -1370,158 +1389,247 @@ export default {
          return
       }
 
+    },
+    // Init
+    initData() {
+      const $this = this
+      this.dataResult = this.dataGrid;
+      const days = this.headerDays()
+      this.columns = [
+        {
+          fixed: 'left', //'left' | 'right'
+          width: this.options.canvas_columns_width,
+          title: () => {
+            return new CanvasTable.Layer({
+              children: [
+                new CanvasTable.Svg({
+                  path: icons['plus'],
+                  style: {
+                    top:0.5,
+                    left: 1,
+                    width: 32,
+                    height: 50,
+                    color: 'transparent',
+                    border:'transparent',
+                  },
+                  event: {
+                    onClick: (e) => {
+                      $this.$emit('on-employee-add');
+                    },
+                    onMouseEnter: (e) => {
+                      //x-canvas-scroll
+                      const el = document.querySelector(".x-canvas-scroll");
+                      const w = window
+                      el.style.cursor = 'pointer';
+
+                      ///  console.log('onMouseEnter',e);
+                    },
+                    onMouseLeave: (e) => {
+                      const el = document.querySelector(".x-canvas-scroll");
+                      el.style.cursor = 'default';
+                      // console.log('onMouseLeave',e);
+                    },
+                    onDoubleClick: (event) => {
+                      console.log('onDoubleClick',event);
+                    }, // Double Click
+                    onContextMenu: (event) => {
+                      console.log('onContextMenu',event);
+                    }
+                  }
+                }),
+                new CanvasTable.Text({
+                  style: {
+                    width: 185,
+                    fontWeight:'bold',
+                    fontSize: this.options.canvas_font_size_20
+                  },
+                  text: `Сотрудник`,
+                  // style: { color: 'gray'}
+                }),
+                new CanvasTable.Text({
+                  style: {
+                    width: 70,
+                    fontWeight:'bold',
+                    fontSize: this.options.canvas_font_size_16,
+                    top: 1,
+                  },
+                  text: this.valueCol, //TODO количество норма часов mok
+                  event: {
+                    onDoubleClick: (e) =>{
+                      this.dataType = "number";
+                      this.focusCell = e.target;
+                      this.showEditor();
+                    },
+                    onMouseEnter: (e) => {
+                      //x-canvas-scroll
+                      const el = document.querySelector(".x-canvas-scroll");
+                      const w = window
+                      el.style.cursor = 'pointer';
+                    },
+                    onMouseLeave: (e) => {
+                      const el = document.querySelector(".x-canvas-scroll");
+                      el.style.cursor = 'default';
+                    },
+                  }
+                  // style: { color: 'gray'}
+                })
+              ]
+            })
+          },
+          dataIndex: 'row',
+          styleColumn: {
+            //  border: [`1px transparent`, `1px #ABB2C6`,`1px transparent`,`1px transparent`]
+            border: headerLeft
+          },
+          // onCell: (record, rowIndex) => {
+          //
+          //   return {
+          //     onClick(data) {
+          //      console.log(data.target.ctx);
+          //     }
+          //   }
+          // },
+          render: (data, record) => this.renderCell({data, record}),
+        },
+      ]
+      days.forEach((d,i)=>{
+        const shortenedDay  = this.isShortenedDay(d);
+        const weekD = this.isWeekEnd(d);
+        const backgroundColor = d === weekD ? '#E2E9FC' : (d === shortenedDay ? '#FFFBEF' :'#EFF2FE')
+        this.columns.push(
+          {
+            align: 'center',
+            width: this.options.canvas_cell_w,
+            title: d, //d
+            day: d,
+            index: i,
+            dataIndex: 'plan',
+            popTitle: d === shortenedDay  ? this.shortenedDay && this.shortenedDay.popTitle && this.shortenedDay.popTitle : '',
+            styleColumn: {
+              fontSize: this.options.canvas_font_size_14,
+              fontWeight: 'normal',
+              color: 'rgba(115, 129, 163, 0.7)',
+              backgroundColor: backgroundColor,
+              border: headerLevelBorder(backgroundColor),
+              //border: `1px #9EA7C5`,
+            },
+            render: (data, record) => {
+              let backgroundColorCell = levelBgRow(record.row.type);
+              backgroundColorCell = d === weekD ? '#E2E9FC' : (d === shortenedDay ? '#FFFBEF' : levelBgRow(record.row.type));
+
+              const row = record.row;
+
+              if(this.isSelectedCell(row)) {
+                backgroundColorCell = colors.Primary;
+              }
+
+              // TODO расчет выходыне дни подкрашиваем и сокращенные дни;
+              return this.cellField(record,backgroundColorCell,d);
+            }
+          },
+        )
+      })
+      this.dataTable = this.generatePersons(true);
+      this.heightRowSize(this.dataTable.length);
+      this.valueCol = this.headerColumnsTotal
+    },
+
+    resizeCanvas() {
+      const w = window
+      const ct = w.ct
+      if(!ct) {
+        return
+      }
+      const el = document.getElementById('containerCanvas');
+      ct.props = this.configTable(el)
+      ct.source = this.dataTable
+      ct.resize()
+
+    },
+
+    // Респонзы;
+    responseTable() {
+      let w = 0;
+      if(this.viewWidth <= 1440 && this.viewWidth > 1366) {
+        w = 35.5;
+        this.options.canvas_cell_w = w;
+        this.options.canvas_header_height = w;
+        this.options.canvas_row_height = w;
+
+        this.options.canvas_font_size_16 = '14px'
+        this.options.canvas_font_size_20 = '16px'
+        this.options.canvas_font_size_14 = '12px'
+        this.options.canvas_icon = {
+          top: 1.3,
+          left: 5,
+          width: 17,
+          height: 17,
+        }
+        //   this.keyTable = 3;
+        //   this.initData();
+        //   this.resizeCanvas()
+        console.log('start responseTable',1440);
+      }else if(this.viewWidth <= 1366) {
+
+        w = 33;
+        this.options.canvas_cell_w = w;
+        this.options.canvas_header_height = w;
+        this.options.canvas_row_height = w;
+
+        this.options.canvas_font_size_16 = '14px'
+        this.options.canvas_font_size_20 = '16px'
+        this.options.canvas_font_size_14 = '12px'
+        this.options.canvas_icon = {
+          top: 1.3,
+          left: 4.2,
+          width: 17,
+          height: 17,
+        }
+        //  this.keyTable = 2;
+        //   this.initData();
+        //   this.resizeCanvas();
+        // this.updateTable()
+
+        console.log('start responseTable',1366);
+      }else{
+        w = 40;
+        this.options.canvas_cell_w = w;
+        this.options.canvas_header_height = w;
+        this.options.canvas_row_height = w;
+
+        this.options.canvas_font_size_16 = '16px'
+        this.options.canvas_font_size_20 = '20px'
+        this.options.canvas_font_size_14 = '14px'
+        this.options.canvas_icon = {
+          left: 5,
+          top: 1,
+          width: 20,
+          height: 20,
+        }
+        // this.keyTable = 1;
+        console.log('start responseTable');
+      }
+       this.initData();
+
+      this.cancelTimeout()
+      if(this.currentTimeout) return
+      this.currentTimeout = setTimeout(async () => {
+      //  this.resizeCanvas()
+        await this.updateTable();
+      })
     }
   },
 
   created() {
-    const $this = this
-    this.dataResult = this.dataGrid;
-    const days = this.headerDays()
-   // console.log('__data__',this.dataTable); //department
-    this.columns = [
-      {
-        fixed: 'left', //'left' | 'right'
-        width: this.options.canvas_columns_width,
-        title: () => {
-          return new CanvasTable.Layer({
-            children: [
-              new CanvasTable.Svg({
-                path: icons['plus'],
-                style: {
-                  top:0.5,
-                  left: 1,
-                  width: 32,
-                  height: 50,
-                  color: 'transparent',
-                  border:'transparent',
-                },
-                event: {
-                  onClick: (e) => {
-                    $this.$emit('on-employee-add');
-                  },
-                  onMouseEnter: (e) => {
-                    //x-canvas-scroll
-                    const el = document.querySelector(".x-canvas-scroll");
-                    const w = window
-                    el.style.cursor = 'pointer';
-
-                    ///  console.log('onMouseEnter',e);
-                  },
-                  onMouseLeave: (e) => {
-                    const el = document.querySelector(".x-canvas-scroll");
-                    el.style.cursor = 'default';
-                    // console.log('onMouseLeave',e);
-                  },
-                  onDoubleClick: (event) => {
-                    console.log('onDoubleClick',event);
-                  }, // Double Click
-                  onContextMenu: (event) => {
-                    console.log('onContextMenu',event);
-                  }
-                }
-              }),
-              new CanvasTable.Text({
-                style: {
-                  width: 185,
-                  fontWeight:'bold',
-                  fontSize: '20px'
-                },
-                text: `Сотрудник`,
-                // style: { color: 'gray'}
-              }),
-              new CanvasTable.Text({
-                style: {
-                  width: 70,
-                  fontWeight:'bold',
-                  fontSize: '16px',
-                  top: 1,
-                },
-                text: this.valueCol, //TODO количество норма часов mok
-                event: {
-                  onDoubleClick: (e) =>{
-                    this.dataType = "number";
-                    this.focusCell = e.target;
-                    this.showEditor();
-                  },
-                  onMouseEnter: (e) => {
-                    //x-canvas-scroll
-                    const el = document.querySelector(".x-canvas-scroll");
-                    const w = window
-                    el.style.cursor = 'pointer';
-                  },
-                  onMouseLeave: (e) => {
-                    const el = document.querySelector(".x-canvas-scroll");
-                    el.style.cursor = 'default';
-                  },
-                }
-                // style: { color: 'gray'}
-              })
-            ]
-          })
-        },
-        dataIndex: 'row',
-        styleColumn: {
-          //  border: [`1px transparent`, `1px #ABB2C6`,`1px transparent`,`1px transparent`]
-          border: headerLeft
-        },
-        // onCell: (record, rowIndex) => {
-        //
-        //   return {
-        //     onClick(data) {
-        //      console.log(data.target.ctx);
-        //     }
-        //   }
-        // },
-        render: (data, record) => this.renderCell({data, record}),
-      },
-    ]
-    days.forEach((d,i)=>{
-      const currentDay  = this.isCurrentDay();
-      const shortenedDay  = this.isShortenedDay(d);
-      const weekD = this.isWeekEnd(d);
-      const backgroundColor = d === weekD ? '#E2E9FC' : (d === shortenedDay ? '#FFFBEF' :'#EFF2FE')
-      this.columns.push(
-        {
-          align: 'center',
-          width: this.options.canvas_cell_w,
-          title: d, //d
-          day: d,
-          index: i,
-          dataIndex: 'plan',
-          popTitle: d === shortenedDay  ? this.shortenedDay && this.shortenedDay.popTitle && this.shortenedDay.popTitle : '',
-          styleColumn: {
-            fontSize: '14px',
-            fontWeight: 'normal',
-            color: 'rgba(115, 129, 163, 0.7)',
-            backgroundColor: backgroundColor,
-            border: headerLevelBorder(backgroundColor),
-            //border: `1px #9EA7C5`,
-          },
-          render: (data, record) => {
-            let backgroundColorCell = levelBgRow(record.row.type);
-                backgroundColorCell = d === weekD ? '#E2E9FC' : (d === shortenedDay ? '#FFFBEF' : levelBgRow(record.row.type));
-
-             const row = record.row;
-
-             if(this.isSelectedCell(row)) {
-               backgroundColorCell = colors.Primary;
-             }
-
-            // TODO расчет выходыне дни подкрашиваем и сокращенные дни;
-            return this.cellField(record,backgroundColorCell,d);
-          }
-        },
-      )
-    })
-    this.dataTable = this.generatePersons(true);
-    this.heightRowSize(this.dataTable.length);
-    this.valueCol = this.headerColumnsTotal
+     this.initData();
   },
 
   mounted() {
+
      const $this = this;
      this.$nextTick(async()=>{
        await this.load()
+       this.responseTable();
      })
 
      window.addEventListener( 'resize', this.safeResize );
@@ -1534,6 +1642,7 @@ export default {
   },
 
   beforeDestroy() {
+    this.cancelTimeout()
     window.removeEventListener( 'wheel', this.handleScroll )
     window.removeEventListener( 'keydown', this.handleScroll )
   },
@@ -1542,7 +1651,7 @@ export default {
     loading(v) {
       if(!v) {
         this.updateTable();
-        console.log('loading end')
+         console.log('loading end')
       }
 
     },
@@ -1564,6 +1673,15 @@ export default {
 <style lang="scss" scoped>
 :root {
   --ViewTable: 1;
+  --zoom: 1;
+}
+.test {
+  background: red;
+  //width: calc(100px * var(--zoom));
+  //height: calc(100px * var(--zoom));
+  padding: calc(5px * 1) calc(13px * 1) calc(7px * 1) calc(13px * 1);
+  width: calc(1px * 1);
+  height: calc(1px * 1);
 }
 .el-header, .el-main, .el-footer {
   border: 1px solid;
@@ -1759,6 +1877,10 @@ $css-prefix: xs-data-grid;
   color: #000;
   border-color: #41A4FF;
   height: 100%;
+  @media screen and (max-width: $media-book) {
+    font-size: 12px;
+  }
+
 }
 
 .input_edit {

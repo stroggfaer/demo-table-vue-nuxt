@@ -89,14 +89,13 @@
             popTitle: 'Сокращенный день <br> 7 часов',
           }"
         ></app-table-canvas>
-
         <!--Dialog-->
         <el-dialog
           :title="modal.title"
           :visible.sync="dialogVisible"
            width="400px"
           :before-close="handleClose">
-          <div class="desc">{{modal.desc}}</div>
+          <div v-if="modal.desc" class="desc">{{modal.desc}}</div>
           <div v-if="modal.type === 'employee'">
             <el-select class="select-filter" v-model="employeeAddValue" clearable placeholder="Выберите сотрудник">
               <el-option
@@ -134,11 +133,47 @@
 import AppTableCanvas from "/components/table-canvas/app-table-canvas";
 import {headerDays} from "/core_table/utils";
 import moment from "moment";
+import {mapGetters} from "vuex";
+import {VIEW_PORT_HEIGHT, VIEW_PORT_WIDTH} from "../store";
 
 const currentDate = moment().format('YYYY-MM')
 console.log('currentDate',currentDate);
 
-
+function adaptiveSizePageScaleInit(definedStartWidth) {
+  const page = document.documentElement;
+  let clientWidth = page.clientWidth;
+  let pageComputedWidth;
+  let resizeCoef;
+  let resizeCoefPercents;
+  let startWidth = definedStartWidth;
+  if (!(startWidth / 1)) {
+    let bodyMinWidthStr = getComputedStyle(document.body).minWidth;
+    let bodyMinWidthNumber = Number(bodyMinWidthStr.replace(/[^0-9]/g, ""));
+    startWidth = bodyMinWidthNumber;
+  }
+  function scalePage(startWidth) {
+    clientWidth = page.clientWidth;
+    if (startWidth / 1 && clientWidth <= startWidth) {
+      pageComputedWidth = parseInt(getComputedStyle(page).width);
+      resizeCoef = clientWidth / pageComputedWidth;
+      resizeCoefPercents = 100 * resizeCoef;
+      page.style.transformOrigin = `top left`;
+      page.style.transform = `scale(${resizeCoef})`;
+      page.style.width = `${resizeCoefPercents}%`;
+      page.style.height = `${resizeCoefPercents}%`;
+    } else {
+      page.style.transform = ``;
+      page.style.transformOrigin = ``;
+      page.style.width = ``;
+      page.style.height = ``;
+    }
+  }
+  window.addEventListener("resize", function () {
+    scalePage(startWidth);
+  });
+  scalePage(startWidth);
+}
+adaptiveSizePageScaleInit(1366);
 export default {
   components: { AppTableCanvas },
 
@@ -504,8 +539,83 @@ export default {
 
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters({
+      viewHeight: VIEW_PORT_HEIGHT,
+      viewWidth: VIEW_PORT_WIDTH
+    }),
+  },
   methods: {
+
+    adaptiveSizePageScaleInit(definedStartWidth) {
+      const page = document.documentElement;
+      let clientWidth = page.clientWidth;
+      let pageComputedWidth;
+      let resizeCoef;
+      let resizeCoefPercents;
+      let startWidth = definedStartWidth;
+      if (!(startWidth / 1)) {
+        let bodyMinWidthStr = getComputedStyle(document.body).minWidth;
+        let bodyMinWidthNumber = Number(bodyMinWidthStr.replace(/[^0-9]/g, ""));
+        startWidth = bodyMinWidthNumber;
+      }
+      function scalePage(startWidth) {
+        clientWidth = page.clientWidth;
+        if (startWidth / 1 && clientWidth <= startWidth) {
+          pageComputedWidth = parseInt(getComputedStyle(page).width);
+          resizeCoef = clientWidth / pageComputedWidth;
+          resizeCoefPercents = 100 * resizeCoef;
+          page.style.transformOrigin = `top left`;
+          page.style.transform = `scale(${resizeCoef})`;
+          page.style.width = `${resizeCoefPercents}%`;
+          page.style.height = `${resizeCoefPercents}%`;
+        } else {
+          page.style.transform = ``;
+          page.style.transformOrigin = ``;
+          page.style.width = ``;
+          page.style.height = ``;
+        }
+      }
+      window.addEventListener("resize", function () {
+        scalePage(startWidth);
+      });
+      scalePage(startWidth);
+    },
+
+    startOnSpecificBrowserInit() {
+      let userAgent = window.navigator.userAgent.toLowerCase();
+      let browser;
+      switch (true) {
+        case userAgent.indexOf("edge") > -1:
+          browser = "msEdge";
+          break;
+        case userAgent.indexOf("edg/") > -1:
+          browser = "chrEdge";
+          break;
+        case userAgent.indexOf("opr") > -1 && !!window.opr:
+          browser = "opera";
+          break;
+        case userAgent.indexOf("chrome") > -1 && !!window.chrome:
+          browser = "сhrome";
+          break;
+        case userAgent.indexOf("trident") > -1:
+          browser = "ie";
+          break;
+        case userAgent.indexOf("firefox") > -1:
+          browser = "firefox";
+          break;
+        case userAgent.indexOf("safari") > -1:
+          browser = "safari";
+          break;
+        default:
+          browser = "other";
+      }
+      if (browser === "safari" || browser === "firefox") {
+        this.adaptiveSizePageScaleInit();
+      }
+    },
+
+
     // Dialog;
     handleClose() {
       this.dialogVisible = false
@@ -602,7 +712,7 @@ export default {
     handleEmployeeModal(e) {
       this.dialogVisible = true
       this.modal.title = 'Добавить сотрудник';
-      this.modal.desc = 'На другой день он проснулся поздно. Возобновляя впечатления прошедшего...';
+      this.modal.desc = '';
       this.modal.type = 'employee';
       this.modal.data = e;
     },
@@ -724,8 +834,8 @@ export default {
 
     handlePlanAdd(e) {
       this.dialogVisible = true
-      this.modal.title = 'Добавить план';
-      this.modal.desc = 'На другой день он проснулся поздно. Возобновляя впечатления прошедшего...';
+      this.modal.title = 'Добавить проект';
+      this.modal.desc = '';
       this.modal.type = 'plan';
       this.modal.data = e;
       console.log('handlePlanAdd',e);
@@ -948,8 +1058,14 @@ export default {
   },
   mounted() {
     this.tableResult = this.testDataMok;
+
+   // this.startOnSpecificBrowserInit();
   },
-  watch: {}
+  watch: {
+    viewWidth(w) {
+     // this.adaptiveSizePageScaleInit(w);
+    }
+  }
 }
 </script>
 
@@ -961,29 +1077,10 @@ export default {
 .plan-table {
   margin-left: -20px;
 }
-.header-top {
-  margin-bottom: 20px;
-  :deep(.el-icon-back:before) {
-    font-weight: bold;
-    font-size: 20px;
-  }
-  :deep(.el-page-header__content) {
-    font-weight: 700;
-    font-size: 32px;
-    line-height: 150%;
-    position: relative;
-    top: 2px;
-  }
-  :deep(.el-page-header__left) {
-    margin-right: 5px;
-    &::after{
-      display: none;
-    }
-  }
-}
+
 /*filters*/
 .filters {
-  max-width: 1500px;
+  //max-width: 1500px;
   .icon-f {
     padding-right: 25px;
   }
@@ -1063,4 +1160,5 @@ export default {
   }
 
 }
+
 </style>

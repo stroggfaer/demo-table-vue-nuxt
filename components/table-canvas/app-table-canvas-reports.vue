@@ -1,8 +1,10 @@
 <template>
-  <div>
-    <div class="xs-data-grid" >
-      <div  id='containerCanvas' :style="{width: `${viewWidth - 70}px`, height: `${heightRow}px`}" v-loading="loading" ref="refCanvas"></div>
-      <div v-if="!dataTable.length" class="empty" :style="{'max-width': `${widthColumns - 10}px`}">Нет данные</div>
+  <div :key="keyTable" >
+<!--    {{widthColumns}}:style="{width: `${widthColumns}px`, height: `${heightRow}px`}"-->
+    <div class="xs-data-grid">
+      <div   id='containerCanvas' :style="{'max-width': `${widthColumns}px`, height: `${heightRow}px`}" v-loading="loading" ref="refCanvas"></div>
+
+      <div v-if="!dataTable.length" class="empty" :style="{'max-width': `${widthColumns}px`,width: `${widthColumns - 10}px`}">Нет данные</div>
       <div
         :class="`xs-data-grid-overlayer`"
         :style="{ top: `${tableHeaderHeight }px` }"
@@ -50,6 +52,8 @@ export default {
 
   data() {
     return {
+      keyTable: 0,
+      isResponse: false,
       // Запрос с бэка;
       dataResult: [],
       focusCell: null,
@@ -83,7 +87,7 @@ export default {
       typeContextMenu: '',
       //Настройки таблицы;
       options: {
-        canvas_cell_w: 80, // Размер ячейки;
+        canvas_cell_w: 85, // Размер ячейки; 85
         canvas_columns_width: 300,
         canvas_header_height: 40,
         canvas_row_height: 40,
@@ -93,6 +97,7 @@ export default {
           total: 0
         }
       },
+      currentTimeout: undefined,
     };
   },
 
@@ -112,7 +117,10 @@ export default {
   },
 
   methods: {
-
+    cancelTimeout () {
+      clearTimeout(this.currentTimeout)
+      this.currentTimeout = undefined
+    },
     print() {
       const ct = window.ct;
 
@@ -806,6 +814,7 @@ export default {
        this.hideEditor();
        this.isDrawing = false;
        this.isDrawingMouseEnter = false;
+       this.responseTable();
     },
 
     /*---Рамка канвас--*/
@@ -866,9 +875,47 @@ export default {
     canvasRender() {
       const w = window
       const ct = w.ct
+      if(!ct) {
+        return
+      }
       ct.source = this.dataTable;
       //this.updateTable();
      // ct.resize();
+    },
+    resizeCanvas() {
+      const w = window
+      const ct = w.ct
+      if(!ct) {
+        return
+      }
+      const el = document.getElementById('containerCanvas');
+      ct.props = this.configTable(el)
+      ct.source = this.dataTable
+      ct.resize()
+    },
+    responseTable() {
+      if(this.viewWidth <= 1440 && this.viewWidth > 1366) {
+          this.options.canvas_cell_w = 74;
+         // this.keyTable = 3;
+          console.log('start responseTable',1440);
+      }else if(this.viewWidth <= 1366) {
+          this.options.canvas_cell_w = 69;
+        //  this.keyTable = 2;
+          console.log('start responseTable',1366);
+      }else{
+          this.options.canvas_cell_w = 85;
+         // this.keyTable = 1;
+          console.log('start responseTable');
+      }
+      this.initData();
+      this.resizeCanvas()
+      this.cancelTimeout()
+      if(this.currentTimeout) return
+      this.currentTimeout = setTimeout(async () => {
+        //  this.resizeCanvas()
+        await this.updateTable();
+      })
+
     },
 
     isScrollHidden(active = false) {
@@ -1008,6 +1055,7 @@ export default {
   },
 
   created() {
+
     this.initData();
   },
 
@@ -1015,6 +1063,7 @@ export default {
      const $this = this;
      this.$nextTick(async()=>{
        await this.load()
+       this.responseTable();
      })
 
      window.addEventListener( 'resize', this.safeResize );
@@ -1026,6 +1075,7 @@ export default {
   },
 
   beforeDestroy() {
+    this.cancelTimeout()
     window.removeEventListener( 'wheel', this.handleScroll )
   },
 
@@ -1049,6 +1099,9 @@ export default {
       // this.canvasRender();
      // this.updateTable();
       console.log('watch currentDateRange')
+    },
+    viewWidth(w) {
+
     }
   }
 
@@ -1086,7 +1139,7 @@ export default {
 //  height: 100vh;
   width: 100%;
   height: 100vh;
-  max-height: 70vh;
+  max-height: 67vh; //70vh;
   max-width: 100%;
  // height: 100%;
   //height:600px;
@@ -1156,16 +1209,21 @@ $css-prefix: xs-data-grid;
   }
 }
 /deep/.x-canvas-table > .x-canvas-scroll .x-canvas-scroll-inner .x-canvas-scroll-end {
-  //height: 24px;
+  height: 24px;
 }
 #circleIcons,#bgBox {
   display: none;
 }
 
 .empty {
+  width: 100%;
   padding: 20px;
-  background: #eaeaea;
-  max-width: 100%;
-
+  position: relative;
+  top: -11px;
+  // background: #eaeaea;
+  border-bottom: 1px solid #8f99b745;
+  border-right: 1px solid #8f99b745;
+  border-top: 1px solid #8f99b745;
+  border-radius: 0px 0px 5px 0px;
 }
 </style>
