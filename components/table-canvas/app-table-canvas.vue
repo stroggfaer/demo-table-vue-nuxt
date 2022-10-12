@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="xs-data-grid" >
-      <div  id='containerCanvas' :style="{'max-width': `${widthColumns}px`, width: `${viewWidth - 70}px`, height: `${heightRow}px`}" v-loading="loading" ref="refCanvas"></div>
-      <div v-if="!dataTable.length" class="empty" :style="{'max-width': `${widthColumns - 10}px`}">Нет данные</div>
+      <div  id='containerCanvas' :style="{'max-width': '1500px', width: `${widthColumns}px`, height: `${heightRow}px`}" v-loading="loading" ref="refCanvas"></div>
+      <div v-if="!dataTable.length" class="empty" :style="{'max-width': `${widthColumns}px`,width: `${widthColumns - 10}px`}">Нет данные</div>
       <div
         :class="`xs-data-grid-overlayer`"
         :style="{ top: `${tableHeaderHeight }px` }"
@@ -138,7 +138,8 @@ export default {
         h: 0,
         day: 0,
         key: '',
-        days: []
+        days: [],
+        target: null
       },
       isCellHover: null,
       isEditCell: false,
@@ -204,12 +205,15 @@ export default {
       switch (this.confirmPop.type) {
         case 'cell':
           this.$emit('on-delete-cell', this.eventEditCell);
+          this.cellOn = null;
           break
         case 'plan':
            this.$emit('on-delete-plan', this.eventEditCell);
+          this.cellOn = null;
            break
         case 'employee':
            this.$emit('on-delete-employee', this.eventEditCell);
+           this.cellOn = null;
            break
       }
       this.hideEditor();
@@ -710,7 +714,7 @@ export default {
           break
         default:
           //
-          break
+         return;
       }
       this.$refs.editor.style.left = leftDynamic;
       this.$refs.editor.style.top = topDynamic;
@@ -971,23 +975,25 @@ export default {
                 const editValue = obj.row.result.find((d)=> d.day === day) || false;
                 this.focusCell = e.target;
                 this.isEditCell = Boolean(editValue);
-                this.cellOn = {...obj, day, value: ''}
+                this.cellOn = {...obj, day, value: '',isEdit: false}
                 this.showEditor();
                 if(editValue) {
                   this.value = editValue.value;
+                  this.cellOn.isEdit = true
                 }
                 this.clearLineDrawRect();
                // console.log('onDoubleClick',this.cellOn);
               },
 
               onClick: (e) => {
-
+                this.cord.target = e.target;
                 // Перерисовка;
                 const w = window
                 const ct = w.ct
                //  ct.source = this.dataTable;
               //  ct.render()
                  const cell = obj.row.result.find(it => it.day === day) || null;
+
                  // if(!cell && this.value !== '' && $this.isNumeric(this.value) && this.cellOn) {
                  //   this.cellOn.value = this.value;
                  //   if(!this.isErrorInput) {
@@ -1265,7 +1271,7 @@ export default {
 
     // TODO расчет выходной недели;
     isWeekEnd(cDay) {
-      console.log(this.dateCurrent,cDay)
+      // console.log(this.dateCurrent,cDay)
       const week = moment(this.dateCurrent,"YYYY-MM").date(cDay).weekday();
       if([0,6].includes(week)) {
         return  cDay;
@@ -1312,13 +1318,18 @@ export default {
       }
       return isSelected
     },
-
+    // Сохраняем значание;
     setInputNumber () {
+
       const $this = this;
       if($this.cellOn) {
         if(!$this.isErrorInput) {
           $this.cellOn.value = $this.value
           $this.$emit('on-cell-value', $this.cellOn);
+        }else if(this.focusCell && ($this.cellOn.isEdit && ['',0].includes($this.cellOn.value))) {
+          console.log('delete',this.value );
+          this.eventEditCell = {delete: { day: $this.cellOn.day, value: $this.cellOn.value }, ...$this.cellOn.row}
+          this.$emit('on-delete-cell', this.eventEditCell);
         }
         $this.hideEditor();
       }
@@ -1338,6 +1349,27 @@ export default {
     //
     handleHourEnter() {
       this.setInputNumber();
+    },
+    // TODO: клавишы;
+    handleKeyControl(e) {
+      switch (e.keyCode) {
+        case 8:
+
+          break
+        case 46:
+         const editCell = this.cellOn;
+          if(editCell && this.cord.target) {
+            this.confirmPop.title = 'Вы уверены, что хотите удалить часы?';
+            this.confirmPop.type = 'cell';
+            this.typeContextMenu = 'popHidden'
+            this.dataType = "contextmenu";
+            this.focusCell = this.cord.target;
+            this.eventEditCell = {delete: { day: editCell.day,value: editCell.value }, ...editCell.row}
+            this.showEditor();
+          }
+         return
+      }
+
     }
   },
 
@@ -1494,6 +1526,7 @@ export default {
 
      window.addEventListener( 'resize', this.safeResize );
      document.addEventListener( 'wheel', this.handleScroll, { passive: true } )
+     document.addEventListener( 'keydown', this.handleKeyControl, { passive: true } )
   },
 
   unmounted () {
@@ -1502,6 +1535,7 @@ export default {
 
   beforeDestroy() {
     window.removeEventListener( 'wheel', this.handleScroll )
+    window.removeEventListener( 'keydown', this.handleScroll )
   },
 
   watch: {
@@ -1739,8 +1773,14 @@ $css-prefix: xs-data-grid;
   height: 100%;
 }
 .empty {
+  width: 100%;
   padding: 20px;
-  background: #eaeaea;
-
+  position: relative;
+  top: -11px;
+ // background: #eaeaea;
+  border-bottom: 1px solid #8f99b745;
+  border-right: 1px solid #8f99b745;
+  border-top: 1px solid #8f99b745;
+  border-radius: 0px 0px 5px 0px;
 }
 </style>

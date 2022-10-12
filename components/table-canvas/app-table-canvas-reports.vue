@@ -87,7 +87,11 @@ export default {
         canvas_columns_width: 300,
         canvas_header_height: 40,
         canvas_row_height: 40,
-        wrapPadding: [0,0,0,20]
+        wrapPadding: [0,0,0,20],
+        headerCell: {
+          title: 'Сотрудник',
+          total: 0
+        }
       },
     };
   },
@@ -108,6 +112,31 @@ export default {
   },
 
   methods: {
+
+    print() {
+      const ct = window.ct;
+
+      const container = document.getElementById('containerCanvas')
+      container.style.width = ct.width + 'px'
+      container.style.height = ct.height + 'px'
+      ct.resize()
+
+      const canvas = ct.canvas
+
+      const url = canvas.toDataURL('image/jpeg')
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'table.jpg');
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+
+      container.style.width = ''
+      container.style.height = ''
+      ct.resize()
+    },
+
     // меняем цвет svg
     svgIconsBase64(idElement, colorEnd, colorStart ='#123123') {
       const element = document.querySelector(`#${idElement}`);
@@ -164,6 +193,7 @@ export default {
                        name: plan.name,
                        parentId: employee.id,
                        departmentId:  department.id,
+                       totalCount: 0,
                        level: 3,
                        row: idx,
                        type: 'plan',
@@ -231,6 +261,11 @@ export default {
       },1000)
       w.onCellClick = this.onCellClick
       w.oncontextmenu = this.onContextMenu
+      this.$emit('load-data-table',{
+          body: this.dataTable,
+          header: { column: this.options.headerCell, days: this.currentDateRange }
+        }
+      );
     },
 
     // Обновить
@@ -241,13 +276,17 @@ export default {
       if ( !ct ) {
         return
       }
-
       this.dataTable = this.generatePersons();
       ct.source = this.dataTable;
       this.heightRowSize(this.dataTable.length)
      // ct.props = this.configTable(el)
       await this.$nextTick()
       ct.resize();
+      this.$emit('load-data-table',{
+        body: this.dataTable,
+        header: {column: this.options.headerCell, days: this.currentDateRange }
+      }
+      );
     },
 
     // Ячейки для вывода;
@@ -286,6 +325,7 @@ export default {
           case 'employee':
             const totalSum = $this.totalPlanSum(record.row);
             const isMaks = false;
+            record.row.totalCount = totalSum;
             titleContent = [
               new CanvasTable.Text({
                 text: data.name,
@@ -326,6 +366,7 @@ export default {
           case 'plan':
            const totalPlanSum = $this.totalSum(record.row.result)
            const isMaksPlan = false;
+            record.row.totalCount = totalPlanSum;
            //TODO: mod;
            const circleIcon = this.svgIconsBase64('circleIcons',`${data.color}`);
             titleContent = [
@@ -440,7 +481,7 @@ export default {
         case 'number' :
           topDynamic = `${top+ 3}px`;
           leftDynamic = `${left - 20}px`;
-          this.valueCol = this.focusCell.text;
+        //  this.valueCol = this.focusCell.text;
           // Получаем;
           setTimeout(()=>{
             this.$refs.el_input.focus();
@@ -574,8 +615,6 @@ export default {
           const totalRow = this.totalRowSum(plan,day);
           // TODO подсчет макс и мин
           const isMaxMin = (totalRow > cell.value || (totalRow > 0 && totalRow < cell.value));
-
-
           if (cell.icon) {
             layerValue = new CanvasTable.Svg({
               path: isMaxMin ? icons[cell.icon + '_red'] : icons[cell.icon] , // sum // close // box
@@ -901,7 +940,7 @@ export default {
                     color: colors.Black,
                     padding: this.options.wrapPadding
                   },
-                  text: `Сотрудник`,
+                  text: this.options.headerCell.title,
                   // style: { color: 'gray'}
                 }),
                 new CanvasTable.Text({
@@ -915,7 +954,7 @@ export default {
                     //  border: '1px #9EA7C5',
                     top: 1,
                   },
-                  text: this.valueCol, //TODO количество норма часов mok
+                  text: this.options.headerCell.total, //TODO количество норма часов mok
                   // style: { color: 'gray'}
                 })
               ]
@@ -962,7 +1001,8 @@ export default {
       })
       this.dataTable = this.generatePersons(true);
       this.heightRowSize(this.dataTable.length);
-      this.valueCol = this.headerColumnsTotal
+      // this.valueCol = this.headerColumnsTotal
+      this.options.headerCell.total = this.headerColumnsTotal;
     }
 
   },

@@ -91,8 +91,9 @@
         </div>
 <!--        <pre v-loading="loading">{{tableResult}}</pre>-->
 <!--        <pre>{{currentDateRange}}</pre>-->
-         <pre>{{dateRange}}</pre>
+<!--         <pre>{{dateRange}}</pre>-->
         <app-table-canvas-reports
+          @load-data-table="handleDataTable"
           :key="key"
           class="plan-table"
           :loading="loading"
@@ -118,7 +119,14 @@ import {arrMounts, headerRangeDays, isMinMaxRangeDays} from "/core_table/utils";
 import moment from "moment";
 import AppTableCanvasReports from "../../components/table-canvas/app-table-canvas-reports";
 import DatePickerRangePopover from "../../components/date-picker-range-popover";
+//EXEL
+//import XLSX from 'xlsx';
+// import * as XLSX from 'xlsx';
+//import * as XLSX from 'xlsx/xlsx.mjs';
 
+import * as alasql from "alasql";
+
+//import * as XLSX from 'xlsx';
 
 const range = ['2022-10-01', '2022-10-14']
 
@@ -162,6 +170,8 @@ export default {
       projectValue: [],
       employeeValue: [],
       currentDateRange: [],
+      // Обртаный вызов табличка;
+      dataTable: []
     }
   },
   computed: {},
@@ -183,7 +193,7 @@ export default {
       }
     },
 
-     formatDateRange(dateRange,type = '') {
+    formatDateRange(dateRange,type = '') {
        if(type === 'start' && dateRange.start) {
           const m = moment(dateRange.start,'YYYY-MM-DD');
           return `${m.format('DD')} ${arrMounts(m.format('M'))} ${m.format('YYYY')}`
@@ -204,22 +214,10 @@ export default {
         cancelButtonClass: 'default',
         customClass: 'confirm__modal center'
       }).then(async () => {
-        this.$message.success('Вы успешно скачали! но Excel загружается с апи');
+        //this.$message.success('Вы успешно скачали! но Excel загружается с апи');
+        this.handleExcelDownload();
         //
       }).catch((e)=>{});
-    },
-    // Фильтры эмитация фильтр;
-    filtersArr() {
-
-      /*
-      this.testDataMok.forEach((works)=>{
-        works.forEach((employees)=>{
-          employees.forEach((plan)=>{
-           //
-          })
-        })
-      })
-       */
     },
 
     handleWorks(id) {
@@ -837,6 +835,85 @@ export default {
            ]
          },
        ]
+    },
+
+    /*---------------Эксель------------------*/
+    handleExcelDownload() {
+      let xslData = [];
+      const days = this.dataTable.header.days;
+      const thCell = Object.assign(...days.map((it)=> ({[`'${it.date}'`]: it.day} )))
+      xslData.push({
+        row :  this.dataTable.header.column.title,
+        total: `${this.dataTable.header.column.total} ч`,
+        ...thCell
+      })
+      //
+      this.dataTable.body.forEach((item)=> {
+        // Отдел
+        if(item.row.type === 'department') {
+          let assignD = {}
+          const d = days.map((it)=> ({[`'${it.date}'`]: '' } ));
+          if(d && d.length)  assignD = Object.assign(...d)
+          xslData.push({row : item.row.name, total: '',...assignD})
+        }
+        // Сотрудник
+        if(item.row.type === 'employee') {
+          let assign = {}
+          const cell = item.row.result.map((it)=> ({[`'${it.dateFormat.date}'`]: it.popTitle ? it.popTitle : `${it.value[0]}/${it.value[1]}`}));
+          if(cell && cell.length) assign = Object.assign(...cell)
+          xslData.push({ row : item.row.name, total: `${item.row.totalCount[0] || 0}/${item.row.totalCount[1] || 0}`, ...assign })
+        }
+        // Проект
+        if(item.row.type === 'plan') {
+           let assignPlan = {}
+           const cellPlan = days.map((it) => {
+              const valueDate = item.row.result.find((v) => v.dateFormat.date === it.date) || null;
+              if(valueDate) {
+                return {[`'${valueDate.dateFormat.date}'`]: `${valueDate.value[0] || 0}/${valueDate.value[1] || 0}`}
+              }else{
+                return {[`'${it.date}'`]: '0/0'}
+              }
+           })
+           if(cellPlan && cellPlan.length) {
+              assignPlan = Object.assign(...cellPlan)
+           }
+           xslData.push({ row : item.row.name, total: `${item.row.totalCount[0] || 0}/${item.row.totalCount[1] || 0}`, ...assignPlan })
+        }
+      })
+      const start = moment(this.dateRange.start,'YYYY-MM-DD').format('DD.MM.YYYY');
+      const end = moment(this.dateRange.end,'YYYY-MM-DD').format('DD.MM.YYYY');
+      //
+      const header = {
+        sheetid: `c ${start} по ${end}`,
+        headers: false,
+        column: {style:{Font:{Bold:"1"}}},
+        rows: {1:{style:{Font:{Color:"#FF0077"}}}},
+        cells: {1:{1:{
+              style: {Font:{Color:"#00FFFF"}}
+            }}}
+      }
+      const formatType = 1
+      /*---Логика---*/
+      try {
+        // XLSX
+        if(formatType === 1) {
+          const XLSX = require("xlsx/xlsx.mjs");
+        //  alasql.utils.global.XLSX = XLSX;
+          alasql["private"].externalXlsxLib = XLSX;
+          // alasql["private"].externalXlsxLib = require('xlsx');
+         // alasql.promise(`SELECT * INTO XLSX("report_${this.dateRange.start}_${this.dateRange.end}.xlsx",?) FROM ?`,[header, xslData]);
+          const fileName = `report_${this.dateRange.start}_${this.dateRange.end}.xlsx`
+          alasql('SELECT * INTO XLSX("'+fileName+".xlsx"+'",?) FROM ?',[header ,xslData]);
+        }else{
+          alasql(`SELECT * INTO XLSXML("report_${this.dateRange.start}_${this.dateRange.end}.xls",?) FROM ?`,[header, xslData]);
+        }
+      }catch (e) {
+        console.log('err',e);
+      }
+    },
+
+    handleDataTable(data) {
+        this.dataTable = data;
     }
 
   },

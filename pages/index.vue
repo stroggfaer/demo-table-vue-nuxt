@@ -137,6 +137,8 @@ import moment from "moment";
 
 const currentDate = moment().format('YYYY-MM')
 console.log('currentDate',currentDate);
+
+
 export default {
   components: { AppTableCanvas },
 
@@ -523,7 +525,7 @@ export default {
         setTimeout(()=>{
           this.dateValue = m
           this.tableResult = m === '2022-10' ? this.tableResult = this.testDataMok : this.testDataMok1
-          console.log('m',m);
+         // console.log('m',m);
           this.loading = false;
         },500)
     },
@@ -534,7 +536,7 @@ export default {
       const addPlan = [];
       if (row.delete) {
         this.loading = true;
-        setTimeout(()=>{
+      //  setTimeout(()=>{
           this.testDataMok.forEach((item)=>{
             if(item.id === row.departmentId) {
               const employee = item.employee.find((its) => its.id === row.parentId);
@@ -555,7 +557,7 @@ export default {
           })
           this.tableResult = addPlan
           this.loading = false;
-        },300)
+      //  },300)
       }
     },
 
@@ -731,7 +733,7 @@ export default {
     },
 
     handleAddPlan(data) {
-      console.log(data);
+      // console.log(data);
     },
     // Фильтры эмитация фильтр;
     filtersArr() {

@@ -59,6 +59,7 @@ export default {
     }
   },
   methods: {
+    // https://vcalendar.io/disable-dates.html
     /*TODO: style calendar range*/
     styleCalendar(prefix = 'blue') {
       return {
