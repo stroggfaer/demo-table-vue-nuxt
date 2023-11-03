@@ -13,17 +13,17 @@
     "alasql": "^2.1.4",
     "canvas-datagrid": "^0.4.5",
     "element-ui": "^2.13.2",
+    "excel-column-name": "^1.0.1",
     "kt-canvas-table": "^1.0.4",
     "moment": "^2.29.1",
     "nuxt": "^2.14.0",
+    "sheetjs-style": "^0.15.8",
     "v-calendar": "^2.4.1",
     "vue-autonumeric": "^1.2.3",
     "vue-canvas-table": "^1.0.3",
     "vue-cheetah-grid": "^1.8.1",
     "vue-virtual-scroller": "^1.0.10",
-    "x-canvas-table": "git+https://github.com/stroggfaer/canvastable.git#v14",
-    "xlsx": "^0.18.5",
-    "xlsx-style": "^0.8.13"
+    "x-canvas-table": "git+https://github.com/stroggfaer/canvastable.git#v14"
   },
   "devDependencies": {
     "node-sass": "^4.14.1",

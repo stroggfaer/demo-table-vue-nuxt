@@ -1,38 +1,15 @@
 <template>
   <el-container class="wrap">
     <el-aside width="70px">
-      <div class="logo">
-        <svg width="49" height="34" viewBox="0 0 49 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <mask id="path-1-outside-1_197_13039" maskUnits="userSpaceOnUse" x="0" y="0" width="49" height="22" fill="black">
-            <rect fill="white" width="49" height="22"/>
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M1 20.74L20.27 11.105L23.56 1L1 12.28V20.74ZM48 20.74L28.73 11.105L25.44 1L48 12.28V20.74Z"/>
-          </mask>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M1 20.74L20.27 11.105L23.56 1L1 12.28V20.74ZM48 20.74L28.73 11.105L25.44 1L48 12.28V20.74Z" fill="url(#paint0_radial_197_13039)"/>
-          <path d="M20.27 11.105L20.4936 11.5522L20.6807 11.4587L20.7454 11.2598L20.27 11.105ZM1 20.74H0.5V21.549L1.22361 21.1872L1 20.74ZM23.56 1L24.0354 1.15479L24.4055 0.0182459L23.3364 0.552786L23.56 1ZM1 12.28L0.776393 11.8328L0.5 11.971V12.28H1ZM28.73 11.105L28.2546 11.2598L28.3193 11.4587L28.5064 11.5522L28.73 11.105ZM48 20.74L47.7764 21.1872L48.5 21.549V20.74H48ZM25.44 1L25.6636 0.552788L24.5945 0.0182479L24.9646 1.1548L25.44 1ZM48 12.28H48.5V11.971L48.2236 11.8328L48 12.28ZM20.0464 10.6578L0.776393 20.2928L1.22361 21.1872L20.4936 11.5522L20.0464 10.6578ZM23.0846 0.845207L19.7946 10.9502L20.7454 11.2598L24.0354 1.15479L23.0846 0.845207ZM1.22361 12.7272L23.7836 1.44721L23.3364 0.552786L0.776393 11.8328L1.22361 12.7272ZM1.5 20.74V12.28H0.5V20.74H1.5ZM28.5064 11.5522L47.7764 21.1872L48.2236 20.2928L28.9536 10.6578L28.5064 11.5522ZM24.9646 1.1548L28.2546 11.2598L29.2054 10.9502L25.9154 0.845209L24.9646 1.1548ZM48.2236 11.8328L25.6636 0.552788L25.2164 1.44722L47.7764 12.7272L48.2236 11.8328ZM48.5 20.74V12.28H47.5V20.74H48.5Z" fill="white" mask="url(#path-1-outside-1_197_13039)"/>
-          <path d="M20.5077 21.8379L20.4753 21.7384L20.3818 21.6917L1.1118 12.0567L0.75 11.8758V12.2803V20.7403V20.8948L0.888197 20.9639L23.4482 32.2439L23.9827 32.5112L23.7977 31.9429L20.5077 21.8379Z" fill="url(#paint1_linear_197_13039)" stroke="white" stroke-width="0.5"/>
-          <path d="M28.4923 21.8379L28.5247 21.7384L28.6182 21.6917L47.8882 12.0567L48.25 11.8758L48.25 12.2803L48.25 20.7403L48.25 20.8948L48.1118 20.9639L25.5518 32.2439L25.0173 32.5112L25.2023 31.9429L28.4923 21.8379Z" fill="url(#paint2_linear_197_13039)" stroke="white" stroke-width="0.5"/>
-          <defs>
-            <radialGradient id="paint0_radial_197_13039" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(26.3159 -8.00637) rotate(110.726) scale(35.6162 88.3481)">
-              <stop stop-color="#008DD2"/>
-              <stop offset="1" stop-color="#044D8D"/>
-            </radialGradient>
-            <linearGradient id="paint1_linear_197_13039" x1="20.0704" y1="2.26074" x2="-3.2658" y2="6.08005" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#35ADE3"/>
-              <stop offset="1" stop-color="#0076AB"/>
-            </linearGradient>
-            <linearGradient id="paint2_linear_197_13039" x1="28.9296" y1="2.26074" x2="52.2658" y2="6.08005" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#35ADE3"/>
-              <stop offset="1" stop-color="#0076AB"/>
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
+      <div class="logo">LOGO</div>
       <div class="bg"></div>
     </el-aside>
     <el-container>
       <el-header></el-header>
       <el-main>
-        <el-page-header class="header-top" title="" content="Общий план ресурсов"></el-page-header>
+<!--        <el-page-header class="header-top" title="" content="DEMO Table Canvas" ></el-page-header>-->
+        <div class="header-top"><h1>DEMO Table Canvas</h1></div>
+        <nuxt-link to="/time-reports" class="menu">Верстка Отчеты по времени</nuxt-link>
         <div class="filters">
           <div class="icon-f">
             <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -66,7 +43,7 @@
             </el-option>
           </el-select>
           <div class="filter_date">
-            <v-date-picker ref="datePicker" :value='dateValue' class="mount__com" @update:from-page="handleMonthNavigation"/>
+<!--            <v-date-picker ref="datePicker" :value='dateValue' class="mount__com" @update:from-page="handleMonthNavigation"/>-->
           </div>
         </div>
         <app-table-canvas
@@ -184,6 +161,155 @@ export default {
       loadingBtn: false,
       isMounted: false,
       testDataMok: [
+        {
+          name: 'Отдел 1',
+          id: 1001,
+          result: null,
+          employee: [
+            {
+              name: 'Фамилия Имя',
+              open: true,
+              id: 1000,
+              parentId: 1001,
+              result:  headerDays().map((day) => {
+                if([11,12,13].includes(day)) {
+                  return {
+                    day: day,
+                    value:0,
+                    color: null,
+                    icon: 'close',
+                    popTitle: 'Отгул'
+                  }
+                } else if([14,15,16].includes(day)) {
+                  return {
+                    day: day,
+                    value:0,
+                    color: null,
+                    icon: 'box',
+                    popTitle: 'Больничный'
+                  }
+                } else if([17,18,19,20,21,22,23,24,25].includes(day)) {
+                  return {
+                    day: day,
+                    value: 0,
+                    color: null,
+                    icon: 'sum',
+                    popTitle: 'Отпуск'
+                  }
+                }else if([6].includes(day)){
+                  return {
+                    day: day,
+                    value: 7,
+                    color: `#686B72`,
+                    icon: null
+                  }
+                }else{
+                  return {
+                    day: day,
+                    value: this.isWeek(day),
+                    color: `#686B72`,
+                    icon: null
+                  }
+                }
+
+              }),
+              plan: [
+                {
+                  id: 16,
+                  name: 'Проект 16 1',
+                  sort: 1,
+                  parentId: 1000,
+                  color: '#3c9693',
+                  countHour: 79,
+                  result: [
+                    {
+                      day: 2,
+                      value: 8,
+                      color: null,
+                      icon: null
+                    },
+                    {
+                      day: 3,
+                      value: 8,
+                      color: null,
+                      icon: null
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              name: 'Фамилия 1010',
+              open: false,
+              id: 1010,
+              parentId: 1001,
+              result:  headerDays().map((day,ind) => {
+                if([6].includes(day)){
+                  return {
+                    day: day,
+                    value: 7,
+                    color: `#686B72`,
+                    icon: null
+                  }
+                }else{
+                  return {
+                    day: day,
+                    value: this.isWeek(day) ,
+                    color: `#686B72`,
+                    icon: null
+                  }
+                }
+
+              }),
+              plan: [
+                {
+                  id: 17,
+                  name: 'Проект 1',
+                  sort: 1,
+                  parentId: 1010,
+                  color: '#243a93',
+                  countHour: 167,
+                  result: []
+                },
+              ]
+            },
+            {
+              name: 'Фамилия 1011',
+              open: true,
+              id: 1011,
+              parentId: 1001,
+              result:  headerDays().map((day) => {
+                if([6].includes(day)){
+                  return {
+                    day: day,
+                    value: 7,
+                    color: `#686B72`,
+                    icon: null
+                  }
+                }else{
+                  return {
+                    day: day,
+                    value: this.isWeek(day),
+                    color: `#686B72`,
+                    icon: null
+                  }
+                }
+
+              }),
+              plan: [
+                {
+                  id: 18,
+                  name: 'Проект 1011',
+                  sort: 1,
+                  parentId: 1011,
+                  color: '#935224',
+                  countHour: 167,
+                  result: []
+                },
+              ]
+            }
+          ]
+        },
         {
           name: 'Отдел 1',
           id: 1001,
@@ -334,174 +460,174 @@ export default {
           ]
         },
 
-        {
-          name: 'Отдел 2',
-          id: 1002,
-          result: null,
-          employee: [
-            {
-              id: 1006,
-              parentId: 1002,
-              name: 'Фамилия Имя 2',
-              open: false,
-              result:  headerDays().map((day) => {
-                if([6].includes(day)) {
-                  return {
-                    day: day,
-                    value: 7,
-                    color: `#EB5757`,
-                    icon: null
-                  }
-                }else{
-                  return {
-                    day: day,
-                    value: this.isWeek(day),
-                    color: `#686B72`,
-                    icon: null
-                  }
-                }
-
-              }),
-              plan: [
-                {
-                  id: 10,
-                  name: 'Проект 2',
-                  sort: 1,
-                  parentId: 1006,
-                  color: '#0c57fd',
-                  countHour: 50,
-                  result: [
-                    {
-                      day: 10,
-                      value: 8,
-                      color: null,
-                      icon: null
-                    },
-                    {
-                      day: 11,
-                      value: 8,
-                      color: null,
-                      icon: null
-                    }
-                  ]
-                },
-                {
-                  id: 11,
-                  name: 'Проект 5',
-                  sort: 2,
-                  parentId: 1006,
-                  color: '#d1fd0c',
-                  countHour: 50,
-                  result: [
-                    {
-                      day: 10,
-                      value: 8,
-                      color: null,
-                      icon: null
-                    },
-                    {
-                      day: 11,
-                      value: 8,
-                      color: null,
-                      icon: null
-                    }
-                  ]
-                },
-                {
-                  id: 12,
-                  name: 'Проект 3',
-                  sort: 3,
-                  parentId: 1006,
-                  color: '#800cfd',
-                  countHour: 67,
-                  result: [
-                    {
-                      day: 10,
-                      value: 8,
-                      color: null,
-                      icon: null
-                    },
-                    {
-                      day: 11,
-                      value: 8,
-                      color: null,
-                      icon: null
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          name: 'Отдел 3',
-          id: 1003,
-          result: null,
-          employee: [
-            {
-              id: 1007,
-              parentId: 1003,
-              name: 'Фамилия Имя 3',
-              open: true,
-              result:  headerDays().map((day) => {
-                if([6].includes(day)) {
-                  return {
-                    day: day,
-                    value: 7,
-                    color: `#EB5757`,
-                    icon: null
-                  }
-                }else{
-                  return {
-                    day: day,
-                    value: this.isWeek(day),
-                    color: `#686B72`,
-                    icon: null
-                  }
-                }
-
-              }),
-              plan: [
-                {
-                  id: 13,
-                  name: 'Проект 2',
-                  sort: 1,
-                  parentId: 1007,
-                  color: '#02dc3f',
-                  countHour: 50,
-                  result: []
-                },
-                {
-                  id: 14,
-                  name: 'Проект 3',
-                  sort: 1,
-                  parentId: 1007,
-                  color: '#6523c9',
-                  countHour: 50,
-                  result: []
-                },
-                {
-                  id: 15,
-                  name: 'Проект 4',
-                  sort: 1,
-                  parentId: 1007,
-                  color: '#c92395',
-                  countHour: 50,
-                  result: []
-                },
-                {
-                  id: 16,
-                  name: 'Проект 16 1',
-                  sort: 1,
-                  parentId: 1007,
-                  color: '#c5da0f',
-                  countHour: 7,
-                  result: []
-                }
-              ]
-            }
-          ]
-        },
+        // {
+        //   name: 'Отдел 2',
+        //   id: 1002,
+        //   result: null,
+        //   employee: [
+        //     {
+        //       id: 1006,
+        //       parentId: 1002,
+        //       name: 'Фамилия Имя 2',
+        //       open: false,
+        //       result:  headerDays().map((day) => {
+        //         if([6].includes(day)) {
+        //           return {
+        //             day: day,
+        //             value: 7,
+        //             color: `#EB5757`,
+        //             icon: null
+        //           }
+        //         }else{
+        //           return {
+        //             day: day,
+        //             value: this.isWeek(day),
+        //             color: `#686B72`,
+        //             icon: null
+        //           }
+        //         }
+        //
+        //       }),
+        //       plan: [
+        //         {
+        //           id: 10,
+        //           name: 'Проект 2',
+        //           sort: 1,
+        //           parentId: 1006,
+        //           color: '#0c57fd',
+        //           countHour: 50,
+        //           result: [
+        //             {
+        //               day: 10,
+        //               value: 8,
+        //               color: null,
+        //               icon: null
+        //             },
+        //             {
+        //               day: 11,
+        //               value: 8,
+        //               color: null,
+        //               icon: null
+        //             }
+        //           ]
+        //         },
+        //         {
+        //           id: 11,
+        //           name: 'Проект 5',
+        //           sort: 2,
+        //           parentId: 1006,
+        //           color: '#d1fd0c',
+        //           countHour: 50,
+        //           result: [
+        //             {
+        //               day: 10,
+        //               value: 8,
+        //               color: null,
+        //               icon: null
+        //             },
+        //             {
+        //               day: 11,
+        //               value: 8,
+        //               color: null,
+        //               icon: null
+        //             }
+        //           ]
+        //         },
+        //         {
+        //           id: 12,
+        //           name: 'Проект 3',
+        //           sort: 3,
+        //           parentId: 1006,
+        //           color: '#800cfd',
+        //           countHour: 67,
+        //           result: [
+        //             {
+        //               day: 10,
+        //               value: 8,
+        //               color: null,
+        //               icon: null
+        //             },
+        //             {
+        //               day: 11,
+        //               value: 8,
+        //               color: null,
+        //               icon: null
+        //             }
+        //           ]
+        //         }
+        //       ]
+        //     }
+        //   ]
+        // },
+        // {
+        //   name: 'Отдел 3',
+        //   id: 1003,
+        //   result: null,
+        //   employee: [
+        //     {
+        //       id: 1007,
+        //       parentId: 1003,
+        //       name: 'Фамилия Имя 3',
+        //       open: true,
+        //       result:  headerDays().map((day) => {
+        //         if([6].includes(day)) {
+        //           return {
+        //             day: day,
+        //             value: 7,
+        //             color: `#EB5757`,
+        //             icon: null
+        //           }
+        //         }else{
+        //           return {
+        //             day: day,
+        //             value: this.isWeek(day),
+        //             color: `#686B72`,
+        //             icon: null
+        //           }
+        //         }
+        //
+        //       }),
+        //       plan: [
+        //         {
+        //           id: 13,
+        //           name: 'Проект 2',
+        //           sort: 1,
+        //           parentId: 1007,
+        //           color: '#02dc3f',
+        //           countHour: 50,
+        //           result: []
+        //         },
+        //         {
+        //           id: 14,
+        //           name: 'Проект 3',
+        //           sort: 1,
+        //           parentId: 1007,
+        //           color: '#6523c9',
+        //           countHour: 50,
+        //           result: []
+        //         },
+        //         {
+        //           id: 15,
+        //           name: 'Проект 4',
+        //           sort: 1,
+        //           parentId: 1007,
+        //           color: '#c92395',
+        //           countHour: 50,
+        //           result: []
+        //         },
+        //         {
+        //           id: 16,
+        //           name: 'Проект 16 1',
+        //           sort: 1,
+        //           parentId: 1007,
+        //           color: '#c5da0f',
+        //           countHour: 7,
+        //           result: []
+        //         }
+        //       ]
+        //     }
+        //   ]
+        // },
       ],
       testDataMok1: [
         {
@@ -634,7 +760,7 @@ export default {
         // Mok
         setTimeout(()=>{
           this.dateValue = m
-          this.tableResult = m === '2022-10' ? this.tableResult = this.testDataMok : this.testDataMok1
+          this.tableResult = m  ? this.tableResult = this.testDataMok : this.testDataMok1
          // console.log('m',m);
           this.loading = false;
         },500)
@@ -1160,5 +1286,10 @@ export default {
   }
 
 }
-
+.menu {
+  margin-bottom: 15px;
+  color: #6685e8;
+  text-decoration: underline;
+  display: block;
+}
 </style>

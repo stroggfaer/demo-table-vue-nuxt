@@ -147,8 +147,9 @@ a.el-button {
   width: 70px !important;
   position: relative;
   .bg {
-    background: linear-gradient(0.61deg, #2D20E3 -92.94%, #9ED6EF 99.69%);
-    transform: rotate(-180deg);
+    background: #C7D3FA;
+    //background: linear-gradient(0.61deg, #2D20E3 -92.94%, #9ED6EF 99.69%);
+    //transform: rotate(-180deg);
     position: absolute;
     top:0;
     z-index: -1;

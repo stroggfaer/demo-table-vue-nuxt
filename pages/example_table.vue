@@ -77,7 +77,7 @@ export default {
     },
     getData() {
       const data = this.$refs.datagrid.getData();
-      console.log(data);
+     // console.log(data);
      // alert("获取成功，请查看控制台");
     },
     updateData() {

@@ -1,38 +1,13 @@
 <template>
   <el-container class="wrap">
     <el-aside width="70px">
-      <div class="logo">
-        <svg width="49" height="34" viewBox="0 0 49 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <mask id="path-1-outside-1_197_13039" maskUnits="userSpaceOnUse" x="0" y="0" width="49" height="22" fill="black">
-            <rect fill="white" width="49" height="22"/>
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M1 20.74L20.27 11.105L23.56 1L1 12.28V20.74ZM48 20.74L28.73 11.105L25.44 1L48 12.28V20.74Z"/>
-          </mask>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M1 20.74L20.27 11.105L23.56 1L1 12.28V20.74ZM48 20.74L28.73 11.105L25.44 1L48 12.28V20.74Z" fill="url(#paint0_radial_197_13039)"/>
-          <path d="M20.27 11.105L20.4936 11.5522L20.6807 11.4587L20.7454 11.2598L20.27 11.105ZM1 20.74H0.5V21.549L1.22361 21.1872L1 20.74ZM23.56 1L24.0354 1.15479L24.4055 0.0182459L23.3364 0.552786L23.56 1ZM1 12.28L0.776393 11.8328L0.5 11.971V12.28H1ZM28.73 11.105L28.2546 11.2598L28.3193 11.4587L28.5064 11.5522L28.73 11.105ZM48 20.74L47.7764 21.1872L48.5 21.549V20.74H48ZM25.44 1L25.6636 0.552788L24.5945 0.0182479L24.9646 1.1548L25.44 1ZM48 12.28H48.5V11.971L48.2236 11.8328L48 12.28ZM20.0464 10.6578L0.776393 20.2928L1.22361 21.1872L20.4936 11.5522L20.0464 10.6578ZM23.0846 0.845207L19.7946 10.9502L20.7454 11.2598L24.0354 1.15479L23.0846 0.845207ZM1.22361 12.7272L23.7836 1.44721L23.3364 0.552786L0.776393 11.8328L1.22361 12.7272ZM1.5 20.74V12.28H0.5V20.74H1.5ZM28.5064 11.5522L47.7764 21.1872L48.2236 20.2928L28.9536 10.6578L28.5064 11.5522ZM24.9646 1.1548L28.2546 11.2598L29.2054 10.9502L25.9154 0.845209L24.9646 1.1548ZM48.2236 11.8328L25.6636 0.552788L25.2164 1.44722L47.7764 12.7272L48.2236 11.8328ZM48.5 20.74V12.28H47.5V20.74H48.5Z" fill="white" mask="url(#path-1-outside-1_197_13039)"/>
-          <path d="M20.5077 21.8379L20.4753 21.7384L20.3818 21.6917L1.1118 12.0567L0.75 11.8758V12.2803V20.7403V20.8948L0.888197 20.9639L23.4482 32.2439L23.9827 32.5112L23.7977 31.9429L20.5077 21.8379Z" fill="url(#paint1_linear_197_13039)" stroke="white" stroke-width="0.5"/>
-          <path d="M28.4923 21.8379L28.5247 21.7384L28.6182 21.6917L47.8882 12.0567L48.25 11.8758L48.25 12.2803L48.25 20.7403L48.25 20.8948L48.1118 20.9639L25.5518 32.2439L25.0173 32.5112L25.2023 31.9429L28.4923 21.8379Z" fill="url(#paint2_linear_197_13039)" stroke="white" stroke-width="0.5"/>
-          <defs>
-            <radialGradient id="paint0_radial_197_13039" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(26.3159 -8.00637) rotate(110.726) scale(35.6162 88.3481)">
-              <stop stop-color="#008DD2"/>
-              <stop offset="1" stop-color="#044D8D"/>
-            </radialGradient>
-            <linearGradient id="paint1_linear_197_13039" x1="20.0704" y1="2.26074" x2="-3.2658" y2="6.08005" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#35ADE3"/>
-              <stop offset="1" stop-color="#0076AB"/>
-            </linearGradient>
-            <linearGradient id="paint2_linear_197_13039" x1="28.9296" y1="2.26074" x2="52.2658" y2="6.08005" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#35ADE3"/>
-              <stop offset="1" stop-color="#0076AB"/>
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
+      <div class="logo"></div>
       <div class="bg"></div>
     </el-aside>
     <el-container>
       <el-header></el-header>
       <el-main>
-        <el-page-header class="header-top" title="" content="Отчеты по времени"></el-page-header>
+        <el-page-header class="header-top" title="" content="Отчеты по времени" @back="()=>$router.push('/')"></el-page-header>
         <div class="filters">
           <div class="icon-f">
             <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -119,14 +94,7 @@ import {arrMounts, headerRangeDays, isMinMaxRangeDays} from "/core_table/utils";
 import moment from "moment";
 import AppTableCanvasReports from "../../components/table-canvas/app-table-canvas-reports";
 import DatePickerRangePopover from "../../components/date-picker-range-popover";
-//EXEL
-//import XLSX from 'xlsx';
-// import * as XLSX from 'xlsx';
-//import * as XLSX from 'xlsx/xlsx.mjs';
-
-import * as alasql from "alasql";
-
-//import * as XLSX from 'xlsx';
+import alasql from "alasql";
 
 const range = ['2022-10-01', '2022-10-14']
 
@@ -134,7 +102,6 @@ const range = ['2022-10-01', '2022-10-14']
 const currentDate = '2022-10-01'
 
 const minRange = isMinMaxRangeDays(range[0],range[1]);
-
 //moment.locale('ru');
 console.log('minRange',minRange);
 
@@ -838,7 +805,7 @@ export default {
     },
 
     /*---------------Эксель------------------*/
-    handleExcelDownload() {
+    async handleExcelDownload() {
       let xslData = [];
       const days = this.dataTable.header.days;
       const thCell = Object.assign(...days.map((it)=> ({[`'${it.date}'`]: it.day} )))
@@ -880,32 +847,101 @@ export default {
            xslData.push({ row : item.row.name, total: `${item.row.totalCount[0] || 0}/${item.row.totalCount[1] || 0}`, ...assignPlan })
         }
       })
+
       const start = moment(this.dateRange.start,'YYYY-MM-DD').format('DD.MM.YYYY');
       const end = moment(this.dateRange.end,'YYYY-MM-DD').format('DD.MM.YYYY');
-      //
-      const header = {
-        sheetid: `c ${start} по ${end}`,
-        headers: false,
-        column: {1: {style: {Color:"#E1697B" }} },
-        rows: {1:{style:{Font:{Color:"#FF0077"}}}},
-        cells: {1:{1:{
-              style: {Font:{Color:"#00FFFF"}}
-            }}}
-      }
-      const formatType = 1
+
+      /*--РАБОЧАЯ ВЕРСИИ СО СТИЛЯМИ--*/
+      const fileName = `report_${this.dateRange.start}_${this.dateRange.end}.xlsx`
+      const XLSX = require('sheetjs-style');
+      const excelColumnName = require('excel-column-name');
+
+      const wbr = XLSX.utils.book_new();
+      const wsq = XLSX.utils.json_to_sheet(xslData,{skipHeader: true} );
+
+      // Размер колонки;
+      const wscols = [
+        {wch:20}
+      ];
+      wsq['!cols'] = wscols;
+      xslData.forEach((item,ind)=>{
+        // Шапка;
+        if(ind === 0) {
+          const column = Object.entries(item);
+          column.forEach((it,i)=> {
+           const c = excelColumnName.intToExcelCol(i + 1);
+            // Крашим 1 клонка;
+            wsq[`${c}1`].s = {
+              font: {
+                bold: true,
+                color: {
+                  rgb: "RTTTAA00",
+                },
+              },
+              fill:  {
+                fgColor:{ rgb: "FFFFAA00" },
+                patternType: 'solid',
+              },
+            }
+          })
+        }
+        if(['Отдел 1','Отдел 2','Отдел 3'].includes(item.row)) {
+          const column = Object.entries(item);
+          column.forEach((it,i)=> {
+            const c = excelColumnName.intToExcelCol(i + 1);
+            // Крашим 1 клонка;
+            wsq[`${c}${ind + 1}`].s = {
+              font: {
+                bold: true,
+                color: {
+                  rgb: "RTTTAA00",
+                },
+              },
+              fill:  {
+                fgColor:{ rgb: "bcbcbc" },
+                patternType: 'solid',
+              },
+            }
+          })
+        }
+      });
+
+     XLSX.utils.book_append_sheet(wbr, wsq, `c ${start} по ${end}`);
+     XLSX.writeFile(wbr, `${fileName}.xlsx`);
+      /*--./РАБОЧАЯ ВЕРСИЯ СО СТИЛЯМИ--*/
+
+      const formatType = 10 // off
+
       /*---Логика---*/
       try {
+        //
+        const header = {
+          sheetid: `c ${start} по ${end}`,
+          headers: false,
+          // column: {1: {style: {color:"#E1697B" }} },
+          //rows: {1:{style:{Font:{color:"#FF0077"}}}},
+          column: {1: {color:"#E1697B" }},
+          rows: {1:{style:{fill:{fgColor:{ rgb: "FFFFAA00" }}}}},
+          cells: {
+            1:{
+              color:"#E1697B",
+              fill: {
+                fgColor:{ rgb: "FFFFAA00" }
+              }
+            }
+          },
+        }
         // XLSX
         //ПОЛИГОН
         if(formatType === 1) {
-          const XLSX = require("xlsx/xlsx.mjs");
-        //  alasql.utils.global.XLSX = XLSX;
+          const fileName = `report_${this.dateRange.start}_${this.dateRange.end}.xlsx`
+          //const XLSX = require("xlsx");
+         // alasql.utils.global.XLSX = XLSX;
           alasql["private"].externalXlsxLib = XLSX;
           // alasql["private"].externalXlsxLib = require('xlsx');
-         // alasql.promise(`SELECT * INTO XLSX("report_${this.dateRange.start}_${this.dateRange.end}.xlsx",?) FROM ?`,[header, xslData]);
-          const fileName = `report_${this.dateRange.start}_${this.dateRange.end}.xlsx`
-          alasql('SELECT * INTO XLSX("'+fileName+".xlsx"+'",?) FROM ?',[header ,xslData]);
-        }else{
+          alasql(`SELECT * INTO XLSX("report_${fileName}",?) FROM ?`,[header, xslData]);
+
+        }else if(formatType === 2) {
           alasql(`SELECT * INTO XLSXML("report_${this.dateRange.start}_${this.dateRange.end}.xls",?) FROM ?`,[header, xslData]);
         }
       }catch (e) {
@@ -915,7 +951,7 @@ export default {
 
     handleDataTable(data) {
         this.dataTable = data;
-    }
+    },
 
   },
   created() {
